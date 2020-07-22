@@ -1,6 +1,7 @@
 package org.zxy.flea.service.impl;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.ResponseVO;
 import org.zxy.flea.VO.UserVO;
 import org.zxy.flea.dataobject.User;
@@ -15,6 +16,7 @@ import org.zxy.flea.util.ResponseVOUtil;
 
 import javax.annotation.Resource;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Resource

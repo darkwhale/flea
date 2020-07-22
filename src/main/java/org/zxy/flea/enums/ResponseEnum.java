@@ -15,6 +15,10 @@ public enum ResponseEnum {
 
     USER_NOT_LOGIN(3, "用户未登陆"),
 
+
+    ADDRESS_NOT_EXIST(10, "地址不存在"),
+
+
     PARAM_ERROR(50, "输入参数有误"),
     ;
 
