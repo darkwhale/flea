@@ -12,7 +12,8 @@ import org.zxy.flea.util.ResponseVOUtil;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseVO validHandler() {
+    public ResponseVO validHandler(MethodArgumentNotValidException e) {
+        log.error("输入参数错误 {}", e.getBindingResult());
         return ResponseVOUtil.error(ResponseEnum.PARAM_ERROR);
     }
 

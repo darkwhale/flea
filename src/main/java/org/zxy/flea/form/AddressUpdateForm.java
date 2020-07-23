@@ -6,7 +6,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class AddressForm {
+public class AddressUpdateForm {
+
+    @NotNull
+    private Integer addressId;
 
     @NotNull
     private Integer addressType;
@@ -16,4 +19,5 @@ public class AddressForm {
 
     @NotBlank
     private String addressFloor;
+
 }

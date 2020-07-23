@@ -8,12 +8,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class Address {
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = 5645228902910371151L;
 
     /**
      * 主键
@@ -37,4 +41,12 @@ public class Address {
      */
     private String addressFloor;
 
+    private Date createTime;
+
+    private Date updateTime;
+
+    @Override
+    public String toString() {
+        return addressRegion + " " + addressFloor;
+    }
 }

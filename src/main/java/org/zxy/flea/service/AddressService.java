@@ -1,13 +1,20 @@
 package org.zxy.flea.service;
 
-import org.zxy.flea.VO.ResponseVO;
 import org.zxy.flea.dataobject.Address;
 import org.zxy.flea.form.AddressForm;
+import org.zxy.flea.form.AddressUpdateForm;
+
+import java.util.Map;
 
 public interface AddressService {
 
-    ResponseVO<Address> add(AddressForm addressForm);
+    Address add(AddressForm addressForm);
 
-    ResponseVO<Address> delete(Integer addressId);
+    Address delete(Integer addressId);
+
+    Address update(AddressUpdateForm addressUpdateForm);
+
+    Map<Integer, Address> getAddressList();
+
 
 }

@@ -3,6 +3,7 @@ package org.zxy.flea.dataobject;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.zxy.flea.enums.RoleEnum;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,7 +24,7 @@ public class User {
 
     private String email;
 
-    private Integer role;
+    private Integer role = RoleEnum.CUSTOM.getCode();
 
     private Date createTime;
 
