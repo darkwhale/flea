@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.UserInfoVO;
 import org.zxy.flea.dataobject.Address;
+import org.zxy.flea.dataobject.Campus;
 import org.zxy.flea.dataobject.UserInfo;
 import org.zxy.flea.form.UserInfoForm;
 import org.zxy.flea.mapper.UserInfoRepository;
@@ -21,6 +22,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Resource
     private AddressServiceImpl addressService;
+
+    @Resource
+    private CampusServiceImpl campusService;
 
     @Resource
     private KeyUtil keyUtil;
@@ -73,7 +77,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(userInfo, userInfoVO);
 
+        // 获取地址列表
         Map<Integer, Address> addressMap = addressService.getAddressList();
+
+        // 获取学院列表
+        Map<Integer, Campus> campusMap = campusService.getCampusMap();
 
         if (userInfo.getUserResideAddressId() != null) {
             userInfoVO.setUserResideAddress(addressMap.get(userInfo.getUserResideAddressId()).toString());
@@ -81,6 +89,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         if (userInfo.getUserStudyAddressId() != null) {
             userInfoVO.setUserStudyAddress(addressMap.get(userInfo.getUserStudyAddressId()).toString());
+        }
+
+        if (userInfo.getUserCampusId() != null) {
+            userInfoVO.setUserCampus(campusMap.get(userInfo.getUserCampusId()).getCampusName());
         }
 
         return userInfoVO;

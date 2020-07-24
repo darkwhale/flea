@@ -14,6 +14,9 @@ public class UserInfoForm {
     @NotBlank
     private String userMobile;
 
+    @NotNull
+    private Integer userCampusId;
+
     @NotBlank
     private String userQq;
 

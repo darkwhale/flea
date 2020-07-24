@@ -53,7 +53,11 @@ public class AddressServiceImpl implements AddressService {
     @CacheEvict(cacheNames = "addressList", key = "123")
     public Address update(AddressUpdateForm addressUpdateForm) {
 
-        Address address = new Address();
+        Address address = addressRepository.findById(addressUpdateForm.getAddressId()).orElse(null);
+        if (address == null) {
+            throw new FleaException(ResponseEnum.ADDRESS_NOT_EXIST);
+        }
+
         BeanUtils.copyProperties(addressUpdateForm, address);
 
         addressRepository.save(address);

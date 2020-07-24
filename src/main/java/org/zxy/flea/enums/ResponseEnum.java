@@ -21,6 +21,8 @@ public enum ResponseEnum {
 
     ADDRESS_NOT_EXIST(10, "地址不存在"),
 
+    CAPMUS_NOT_EXIST(11, "学院不存在"),
+
 
     PARAM_ERROR(50, "输入参数有误"),
     ;

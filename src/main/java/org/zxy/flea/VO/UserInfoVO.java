@@ -11,6 +11,8 @@ public class UserInfoVO {
 
     private String userMobile;
 
+    private String userCampus;
+
     private String userQq;
 
     private String userWx;

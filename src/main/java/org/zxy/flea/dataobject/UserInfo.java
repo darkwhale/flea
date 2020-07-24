@@ -22,6 +22,8 @@ public class UserInfo {
 
     private String userEmail;
 
+    private Integer userCampusId;
+
     private Integer userGender = GenderEnum.Male.getCode();
 
     private String userMobile;
