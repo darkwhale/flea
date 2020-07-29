@@ -12,6 +12,8 @@ import org.zxy.flea.util.ResponseVOUtil;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/address")
@@ -40,5 +42,19 @@ public class AddressController {
         Address address = addressService.update(addressUpdateForm);
 
         return ResponseVOUtil.success(address);
+    }
+
+    @GetMapping("/floorList")
+    ResponseVO<List<Address>> floorList() {
+        List<Address> addressList = addressService.getAll();
+
+        return ResponseVOUtil.success(addressList);
+    }
+
+    @GetMapping("/regionList")
+    ResponseVO<Set<String>> regionList() {
+        Set<String> addressList = addressService.getRegionList();
+
+        return ResponseVOUtil.success(addressList);
     }
 }

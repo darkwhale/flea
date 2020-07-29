@@ -1,0 +1,179 @@
+.register-form
+{
+	padding-top: 15px;
+	padding-bottom: 25px;
+	padding-left: 20px;
+	padding-right: 20px;
+	border-radius: 3px;
+    border: 1px solid #7FFF00;
+}
+.register-title
+{
+	color: #00FF00;
+	margin-bottom: 20px;
+}
+.register-body
+{
+	padding-top: 160px;
+}
+.register-input
+{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.register-element
+{
+	text-align: center;
+}
+.register-button
+{
+	background-color: #00FF00;
+}
+.register-text
+{
+	color: #4B0082;
+}
+.register-login
+{
+	color: #00CD00;
+}
+.register-login:hover
+{
+	color: #0000ff;
+}
+.register-error
+{
+	margin-top: 10px;
+	color: #f00;
+}
+
+.navbar-body
+{
+	background-color: #eee;
+}
+.navbar-body .navbar-brand
+{
+	color: #444;
+}
+.navbar-body .navbar-brand:hover,
+.navbar-body .navbar-brand:focus
+{
+	color: #0f0;
+}
+.navbar-body .navbar-nav > li >a
+{
+	color: #444;
+}
+.navbar-body .navbar-nav > li >a:hover,
+.navbar-body .navbar-nav > li >a:focus
+{
+	color: #0f0;
+	background: transparent;
+}
+
+.navbar-button
+{
+	background: transparent;
+}
+.navbar-button:hover
+{
+	color: #0f0;
+	background: transparent;
+}
+
+.container-body
+{
+	padding-top: 70px;
+}
+
+.index-title
+{
+	font-size: 108%;
+}
+.index-title-warn
+{
+	font-size: 108%;
+	color: #EE0000;
+}
+
+.left-border
+{
+    border-left: 1px dashed #7FFF00;
+}
+
+.index-link:link
+{
+	color: #444;
+}
+.index-link:visited
+{
+	color: #444;
+	text-decoration:none;
+}
+.index-link:hover
+{
+	color: #0f0;
+	text-decoration:none;
+}
+.index-link:active
+{
+	color: #0f0;
+	text-decoration:none;
+}
+
+.user-submit
+{
+	background-color: #fff;
+	color: #000000;
+	border: 1px solid #CDCDB4;
+}
+.user-submit:hover
+{
+	background-color: #fff;
+	color:#00ff00;
+}
+
+.user-shop
+{
+	font-size: 150%;
+}
+.user-shop-book
+{
+	font-size: 120%;
+}
+.user-newbtn
+{
+	float: right;
+}
+.book-table
+{
+	margin-top: 10px;
+}
+
+.new-warn
+{
+	margin-left: 10px;
+	color: #912CEE;
+}
+
+.view-element
+{
+	font-size: 120%;
+}
+
+.exchange-link
+{
+	color:#5e5e5e;
+}
+
+.exchange-link:hover
+{
+	color:#00ff00;
+	text-decoration:none;
+}
+
+.register-button
+{
+	background-color: #00aa00;
+}
+

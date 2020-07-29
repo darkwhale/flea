@@ -18,10 +18,17 @@ public enum ResponseEnum {
 
     AUTOHORITY_FAILED(4, "权限不足"),
 
+    USER_NOT_EXIST(5, "用户不存在"),
+
 
     ADDRESS_NOT_EXIST(10, "地址不存在"),
 
     CAPMUS_NOT_EXIST(11, "学院不存在"),
+
+
+    BOOK_BOOTH_EXIST(20, "书摊已存在"),
+
+    BOOK_BOOTH_NOT_EXIST(21, "书摊不存在"),
 
 
     PARAM_ERROR(50, "输入参数有误"),

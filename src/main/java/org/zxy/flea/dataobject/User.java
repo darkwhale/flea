@@ -26,6 +26,22 @@ public class User {
 
     private Integer role = RoleEnum.CUSTOM.getCode();
 
+    private Integer userCampusId;
+
+    private Integer userGender;
+
+    private String userMobile;
+
+    private String userQq;
+
+    private String userWx;
+
+    private Integer userResideAddressId;
+
+    private Integer userStudyAddressId;
+
+    private String enterYear;
+
     private Date createTime;
 
     private Date updateTime;

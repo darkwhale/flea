@@ -13,22 +13,24 @@ import java.util.Date;
 @Data
 @DynamicInsert
 @DynamicUpdate
-public class Booth {
+public class BookBooth {
 
     @Id
     private String boothId;
 
     private String userId;
 
-    private Integer boothType;
-
     private Integer addressId;
+
+    private Integer campusId;
+
+    private String enterYear;
 
     private String boothName;
 
     private String synopsis;
 
-    private Integer rubTime;
+    private Integer rubTime = 0;
 
     private Date createTime;
 

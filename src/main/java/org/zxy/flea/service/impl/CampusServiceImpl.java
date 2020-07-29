@@ -23,7 +23,7 @@ public class CampusServiceImpl implements CampusService {
     private CampusRepository campusRepository;
 
     @Override
-    @CacheEvict(cacheNames = "campus", key = "123")
+    @CacheEvict(cacheNames = "campus", allEntries = true)
     public Campus add(String campusName) {
         Campus campus = new Campus();
         campus.setCampusName(campusName);
@@ -32,7 +32,7 @@ public class CampusServiceImpl implements CampusService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "campus", key = "123")
+    @CacheEvict(cacheNames = "campus", allEntries = true)
     public Campus update(CampusForm campusForm) {
         // 查询campus是否存在
         Campus campus = campusRepository.findById(campusForm.getCampusId()).orElse(null);
@@ -48,7 +48,7 @@ public class CampusServiceImpl implements CampusService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "campus", key = "123")
+    @CacheEvict(cacheNames = "campus", allEntries = true)
     public Campus delete(Integer campusId) {
         // 查询是否存在；
         Campus campus = campusRepository.findById(campusId).orElse(null);
@@ -59,6 +59,12 @@ public class CampusServiceImpl implements CampusService {
         campusRepository.delete(campus);
 
         return campus;
+    }
+
+    @Override
+    @Cacheable(cacheNames = "campus", key = "124")
+    public List<Campus> getList() {
+        return campusRepository.findAll();
     }
 
     @Override

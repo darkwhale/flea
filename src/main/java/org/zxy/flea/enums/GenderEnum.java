@@ -1,9 +1,10 @@
 package org.zxy.flea.enums;
 
 import lombok.Getter;
+import org.zxy.flea.converter.EnumInterface;
 
 @Getter
-public enum GenderEnum {
+public enum GenderEnum implements EnumInterface {
 
     Male(0, "男"),
 

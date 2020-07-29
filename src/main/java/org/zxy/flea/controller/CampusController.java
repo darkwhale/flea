@@ -10,6 +10,7 @@ import org.zxy.flea.util.ResponseVOUtil;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/campus")
@@ -37,6 +38,12 @@ public class CampusController {
         Campus campus = campusService.delete(campusId);
 
         return ResponseVOUtil.success(campus);
+    }
+
+    @GetMapping("/getList")
+    ResponseVO<List<Campus>> getList() {
+        List<Campus> campusList = campusService.getList();
+        return ResponseVOUtil.success(campusList);
     }
 
 }

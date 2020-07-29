@@ -15,6 +15,7 @@ import org.zxy.flea.service.AddressService;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +25,7 @@ public class AddressServiceImpl implements AddressService {
     private AddressRepository addressRepository;
 
     @Override
-    @CacheEvict(cacheNames = "addressList", key = "123")
+    @CacheEvict(cacheNames = "addressList", allEntries = true)
     public Address add(AddressForm addressForm) {
         // 构造address并存储；
         Address address = new Address();
@@ -37,7 +38,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "addressList", key = "123")
+    @CacheEvict(cacheNames = "addressList", allEntries = true)
     public Address delete(Integer addressId) {
         Address address = addressRepository.findById(addressId).orElse(null);
 
@@ -50,7 +51,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "addressList", key = "123")
+    @CacheEvict(cacheNames = "addressList", allEntries = true)
     public Address update(AddressUpdateForm addressUpdateForm) {
 
         Address address = addressRepository.findById(addressUpdateForm.getAddressId()).orElse(null);
@@ -77,4 +78,20 @@ public class AddressServiceImpl implements AddressService {
         return addressList.stream()
                 .collect(Collectors.toMap(Address::getAddressId, address -> address));
     }
+
+    @Override
+    @Cacheable(cacheNames = "addressList", key = "124")
+    public List<Address> getAll() {
+        return addressRepository.findAll();
+    }
+
+    @Override
+    @Cacheable(cacheNames = "addressList", key = "125")
+    public Set<String> getRegionList() {
+        List<Address> addressList = addressRepository.findAll();
+
+        return addressList.stream()
+                .map(Address::getAddressRegion).collect(Collectors.toSet());
+    }
+
 }

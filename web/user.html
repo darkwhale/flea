@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/mycss.css">
+    <script src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/user_control.js"></script>
+    <title>跳蚤学院</title>
+
+</head>
+<body>
+<nav class="navbar navbar-fixed-top navbar-body">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-clollapse-1" aria-expanded=false>
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href=""><?php echo $school_name; ?></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-clollapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="">首页</a></li>
+                <li><a href="">书籍</a></li>
+                <li><a href="">生活</a></li>
+                <li><a href="">海淘</a></li>
+                <li><a href="">意见反馈</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+
+                <li><a href="login.html" id="login"></a></li>
+                <li><a href="register.html" id="register"></a></li>
+                <li><a href="user.html" id="username"></a></li>
+                <li><a href="logout.html" id="logout"></a></li>
+
+            </ul>
+            <div class="navbar-form navbar-right" role="search">
+                <input type="text" name="search" class="form-control" placeholder="search">
+                <input type="button" class="btn navbar-button" value="搜索">
+            </div>
+        </div>
+
+    </div>
+</nav>
+<div class="container container-body">
+    <div class="row">
+        <div class="col-md-2">
+            <h2 class="index-title"><a href="" onclick="ajax_user_info();" class="index-link">个人信息：</a></h2>
+            <h2 class="index-title"><a href="" class="index-link">我的书摊：</a></h2>
+            <h2 class="index-title"><a href="" class="index-link">我的杂货摊：</a></h2>
+        </div>
+
+        <div class="col-md-10 left-border" id="main_body">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

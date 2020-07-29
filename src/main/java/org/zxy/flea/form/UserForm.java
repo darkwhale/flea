@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserInfoForm {
+public class UserForm {
 
     @NotNull
     private Integer userGender;
@@ -30,6 +30,6 @@ public class UserInfoForm {
     private Integer userStudyAddressId;
 
     @NotNull
-    private Integer userGrade;
+    private String enterYear;
 
 }

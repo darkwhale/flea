@@ -9,4 +9,20 @@ public class UserVO {
 
     private String username;
 
+    private String gender;
+
+    private String userMobile;
+
+    private String userCampus;
+
+    private String userQq;
+
+    private String userWx;
+
+    private String userResideAddress;
+
+    private String userStudyAddress;
+
+    private String enterYear;
+
 }
