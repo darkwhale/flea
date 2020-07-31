@@ -1,6 +1,7 @@
 package org.zxy.flea.service;
 
 import org.zxy.flea.dataobject.Address;
+import org.zxy.flea.enums.AddressTypeEnum;
 import org.zxy.flea.form.AddressForm;
 import org.zxy.flea.form.AddressUpdateForm;
 
@@ -19,6 +20,8 @@ public interface AddressService {
     Map<Integer, Address> getAddressList();
 
     List<Address> getAll();
+
+    List<Address> getFilter(AddressTypeEnum addressTypeEnum);
 
     Set<String> getRegionList();
 }

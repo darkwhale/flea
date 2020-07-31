@@ -24,7 +24,7 @@ public class BookBooth {
 
     private Integer campusId;
 
-    private String enterYear;
+    private String icon;
 
     private String boothName;
 

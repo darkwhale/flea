@@ -4,13 +4,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Data
 public class BookBoothForm {
-
-    @NotBlank
-    private String userId;
 
     @NotNull
     private Integer addressId;
@@ -19,15 +15,11 @@ public class BookBoothForm {
     private Integer campusId;
 
     @NotBlank
-    private String enterYear;
-
-    @NotBlank
     private String boothName;
 
     @NotBlank
     private String synopsis;
 
-    private Date createTime;
+    private String icon;
 
-    private Date updateTime;
 }

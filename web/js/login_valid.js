@@ -9,11 +9,16 @@ function ajax_login() {
         alert("请输入密码");
     }
 
+    login(user_email, password);
+
+}
+
+function login(email, password) {
     $.ajax({
         type: "post",
         url: "flea/user/login",
         contentType: "application/json;charset=utf-8",
-        data: JSON.stringify({"email": user_email, "password": password}),
+        data: JSON.stringify({"email": email, "password": password}),
         dataType: "json",
         success: function(message){
             if (message){
@@ -33,5 +38,4 @@ function ajax_login() {
             alert("访问错误");
         }
     });
-
 }

@@ -3,9 +3,13 @@ package org.zxy.flea.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.zxy.flea.VO.BookBoothVO;
+import org.zxy.flea.dataobject.Address;
 import org.zxy.flea.dataobject.BookBooth;
+import org.zxy.flea.dataobject.Campus;
 import org.zxy.flea.enums.ResponseEnum;
 import org.zxy.flea.exception.FleaException;
 import org.zxy.flea.form.BookBoothForm;
@@ -15,6 +19,8 @@ import org.zxy.flea.util.KeyUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BookBoothServiceImpl implements BookBoothService {
@@ -24,6 +30,12 @@ public class BookBoothServiceImpl implements BookBoothService {
 
     @Resource
     private KeyUtil keyUtil;
+
+    @Resource
+    private AddressServiceImpl addressService;
+
+    @Resource
+    private CampusServiceImpl campusService;
 
 
     @Override
@@ -101,5 +113,41 @@ public class BookBoothServiceImpl implements BookBoothService {
     @Override
     public Page<BookBooth> getBoothList(Integer campusId, Integer addressId, Pageable pageable) {
         return bookBoothRepository.findAllByCampusIdAndAddressIdOrderByUpdateTimeDesc(campusId, addressId, pageable);
+    }
+
+    @Override
+    public BookBoothVO converter(BookBooth bookBooth) {
+
+        if (bookBooth == null) {
+            return null;
+        }
+
+        BookBoothVO bookBoothVO = new BookBoothVO();
+        BeanUtils.copyProperties(bookBooth, bookBoothVO);
+
+        // 获取地址列表
+        Map<Integer, Address> addressMap = addressService.getAddressList();
+
+        // 获取学院列表
+        Map<Integer, Campus> campusMap = campusService.getCampusMap();
+
+        if (bookBooth.getCampusId() != null) {
+            bookBoothVO.setBoothCampus(campusMap.get(bookBooth.getCampusId()).getCampusName());
+        }
+
+        if (bookBooth.getAddressId() != null) {
+            bookBoothVO.setAddress(addressMap.get(bookBooth.getAddressId()).toString());
+        }
+
+        return bookBoothVO;
+    }
+
+    @Override
+    public Page<BookBoothVO> converter(Page<BookBooth> bookBoothPage, Pageable pageable) {
+        List<BookBoothVO> bookBoothVOList = bookBoothPage.getContent().stream().map(
+                this::converter
+        ).collect(Collectors.toList());
+
+        return new PageImpl<BookBoothVO>(bookBoothVOList, pageable, bookBoothPage.getTotalElements());
     }
 }

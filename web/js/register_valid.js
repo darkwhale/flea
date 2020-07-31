@@ -21,31 +21,8 @@ function ajax_register() {
         success: function(message){
             if (message){
                 if (message.code === 0) {
-
-                    $.ajax({
-                        type: "post",
-                        url: "flea/user/login",
-                        contentType: "application/json;charset=utf-8",
-                        data: JSON.stringify({"email": user_email, "password": password}),
-                        dataType: "json",
-                        success: function(new_message){
-                            if (new_message){
-                                if (new_message.code === 0) {
-                                    // 写cookie
-                                    document.cookie = 'username=' + new_message.data.username;
-
-                                    window.location=get_main_url();
-                                }else{
-                                    alert("用户名或密码错误");
-                                }
-                            }else {
-                                alert("数据错误")
-                            }
-                        },
-                        error: function(message){
-                            alert("访问错误");
-                        }
-                    });
+                    // 登录
+                    login(user_email, password);
 
                 }else{
                     alert("用户名或密码错误");

@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.dataobject.Address;
+import org.zxy.flea.enums.AddressTypeEnum;
 import org.zxy.flea.enums.ResponseEnum;
 import org.zxy.flea.exception.FleaException;
 import org.zxy.flea.form.AddressForm;
@@ -83,6 +84,12 @@ public class AddressServiceImpl implements AddressService {
     @Cacheable(cacheNames = "addressList", key = "124")
     public List<Address> getAll() {
         return addressRepository.findAll();
+    }
+
+    @Override
+    public List<Address> getFilter(AddressTypeEnum addressTypeEnum) {
+
+        return addressRepository.findByAddressType(addressTypeEnum.getCode());
     }
 
     @Override

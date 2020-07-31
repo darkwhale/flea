@@ -1,11 +1,6 @@
 
 function ajax_logout() {
-    var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
-    if(keys) {
-        for(var i = keys.length; i--;) {
-            document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString();
-        }
-    }
+    clear_cache();
     // window.location="http://127.0.0.1";
     $.ajax({
         type: "post",

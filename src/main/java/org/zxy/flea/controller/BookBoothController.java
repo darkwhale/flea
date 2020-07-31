@@ -3,6 +3,7 @@ package org.zxy.flea.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import org.zxy.flea.VO.BookBoothVO;
 import org.zxy.flea.VO.ResponseVO;
 import org.zxy.flea.consts.FleaConst;
 import org.zxy.flea.dataobject.BookBooth;
@@ -27,35 +28,42 @@ public class BookBoothController {
     private UserServiceImpl userService;
 
     @PostMapping("/create")
-    ResponseVO<BookBooth> create(@Valid @RequestBody BookBoothForm bookBoothForm,
-                                 HttpSession session) {
+    ResponseVO<BookBoothVO> create(@Valid @RequestBody BookBoothForm bookBoothForm,
+                                   HttpSession session) {
 
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
 
         BookBooth bookBooth = bookBoothService.create(bookBoothForm, user.getUserId());
 
-        return ResponseVOUtil.success(bookBooth);
+        BookBoothVO bookBoothVO = bookBoothService.converter(bookBooth);
+
+        return ResponseVOUtil.success(bookBoothVO);
     }
 
     @PostMapping("/close")
-    ResponseVO<BookBooth> close(HttpSession session) {
+    ResponseVO<BookBoothVO> close(HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
 
         BookBooth bookBooth = bookBoothService.close(user.getUserId());
 
-        return ResponseVOUtil.success(bookBooth);
+        BookBoothVO bookBoothVO = bookBoothService.converter(bookBooth);
+
+        return ResponseVOUtil.success(bookBoothVO);
     }
 
-    @GetMapping("/getListByName")
-    ResponseVO<Page<BookBooth>> getListByName(@RequestParam("boothName") String boothName,
-                                              @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
-                                              @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
-        Page<BookBooth> bookBoothPage = bookBoothService.getBoothList(boothName, PageRequest.of(pageNum, pageSize));
-        return ResponseVOUtil.success(bookBoothPage);
+    @GetMapping("/bookBooth")
+    ResponseVO<BookBoothVO> bookBooth(HttpSession session) {
+        User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
+
+        BookBooth bookBooth = bookBoothService.getBooth(user.getUserId());
+
+        BookBoothVO bookBoothVO = bookBoothService.converter(bookBooth);
+
+        return ResponseVOUtil.success(bookBoothVO);
     }
 
     @GetMapping("/getList")
-    ResponseVO<Page<BookBooth>> getList(@RequestParam(value = "campusId", defaultValue = "-1") Integer campusId,
+    ResponseVO<Page<BookBoothVO>> getList(@RequestParam(value = "campusId", defaultValue = "-1") Integer campusId,
                                         @RequestParam(value = "addressId", defaultValue = "-1") Integer addressId,
                                         @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
                                         @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
@@ -77,7 +85,7 @@ public class BookBoothController {
             bookBoothPage = bookBoothService.getBoothList(PageRequest.of(pageNum, pageSize));
         }
 
-        return ResponseVOUtil.success(bookBoothPage);
+        return ResponseVOUtil.success(bookBoothService.converter(bookBoothPage, PageRequest.of(pageNum, pageSize)));
     }
 
 }
