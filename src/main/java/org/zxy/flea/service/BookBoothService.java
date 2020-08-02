@@ -12,11 +12,11 @@ public interface BookBoothService {
 
     BookBooth getBooth(String userId);
 
-    BookBooth create(BookBoothForm bookBoothForm, String userId);
-
-    BookBooth update(BookBoothForm bookBoothForm, String userId);
+    BookBooth modify(BookBoothForm bookBoothForm, String userId);
 
     BookBooth close(String userId);
+
+    BookBooth rub(String userId);
 
     List<BookBooth> getBoothList(List<String> userIdList);
 

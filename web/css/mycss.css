@@ -177,3 +177,17 @@
 	background-color: #00aa00;
 }
 
+.exchange-button
+{
+	background-color: #dddddd;
+}
+
+.exchange-button:hover
+{
+	background-color: #00dd00;
+}
+
+.rub_button
+{
+	margin-left: 10px;
+}

@@ -2,6 +2,7 @@ package org.zxy.flea.service.impl;
 
 
 import org.springframework.beans.BeanUtils;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.zxy.flea.exception.FleaException;
 import org.zxy.flea.form.BookBoothForm;
 import org.zxy.flea.mapper.BookBoothRepository;
 import org.zxy.flea.service.BookBoothService;
+import org.zxy.flea.util.ImageUtil;
 import org.zxy.flea.util.KeyUtil;
 
 import javax.annotation.Resource;
@@ -44,33 +46,25 @@ public class BookBoothServiceImpl implements BookBoothService {
     }
 
     @Override
-    public BookBooth create(BookBoothForm bookBoothForm, String userId) {
-
-        BookBooth byUserId = bookBoothRepository.findByUserId(userId);
-        if (byUserId != null) {
-            throw new FleaException(ResponseEnum.BOOK_BOOTH_EXIST);
-        }
-
-        BookBooth bookBooth = new BookBooth();
-        BeanUtils.copyProperties(bookBoothForm, bookBooth);
-
-        // 设置id，userId
-        bookBooth.setBoothId(keyUtil.genUniqueKey());
-        bookBooth.setUserId(userId);
-
-        return bookBoothRepository.save(bookBooth);
-    }
-
-    @Override
-    public BookBooth update(BookBoothForm bookBoothForm, String userId) {
+    public BookBooth modify(BookBoothForm bookBoothForm, String userId) {
 
         BookBooth bookBooth = bookBoothRepository.findByUserId(userId);
+
+        // 为空则设置id和用户id;
         if (bookBooth == null) {
-            throw new FleaException(ResponseEnum.BOOK_BOOTH_NOT_EXIST);
+            bookBooth = new BookBooth();
+            bookBooth.setBoothId(keyUtil.genUniqueKey());
+            bookBooth.setUserId(userId);
         }
 
         BeanUtils.copyProperties(bookBoothForm, bookBooth);
-        return bookBooth;
+
+        String imagePath = ImageUtil.saveImage("book", userId, bookBoothForm.getImage_info());
+        if(imagePath != null) {
+            bookBooth.setIcon(imagePath);
+        }
+
+        return bookBoothRepository.save(bookBooth);
     }
 
     @Override
@@ -83,6 +77,17 @@ public class BookBoothServiceImpl implements BookBoothService {
         bookBoothRepository.delete(bookBooth);
 
         return bookBooth;
+    }
+
+    @Override
+    public BookBooth rub(String userId) {
+        BookBooth bookBooth = bookBoothRepository.findByUserId(userId);
+        if (bookBooth == null) {
+            throw new FleaException(ResponseEnum.BOOK_BOOTH_NOT_EXIST);
+        }
+
+        rubSelf(bookBooth);
+        return bookBoothRepository.save(bookBooth);
     }
 
     @Override
@@ -148,6 +153,10 @@ public class BookBoothServiceImpl implements BookBoothService {
                 this::converter
         ).collect(Collectors.toList());
 
-        return new PageImpl<BookBoothVO>(bookBoothVOList, pageable, bookBoothPage.getTotalElements());
+        return new PageImpl<>(bookBoothVOList, pageable, bookBoothPage.getTotalElements());
+    }
+
+    private void rubSelf(BookBooth bookBooth) {
+        bookBooth.setRubTime(bookBooth.getRubTime() + 1);
     }
 }

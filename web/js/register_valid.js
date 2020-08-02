@@ -25,7 +25,7 @@ function ajax_register() {
                     login(user_email, password);
 
                 }else{
-                    alert("用户名或密码错误");
+                    alert("用户已存在");
                 }
             }else {
                 alert("数据错误")

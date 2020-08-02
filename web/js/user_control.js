@@ -89,7 +89,6 @@ function ajax_book_booth() {
         dataType: "json",
         success: function(message){
             if (message){
-                console.log(message);
                 if (message.code === 0) {
                     // 如果data为null，则需要创建书摊;
                     var main_body = document.getElementById("main_body");
@@ -111,6 +110,17 @@ function ajax_book_booth() {
                         exchange_info.textContent = "编辑书摊";
                     }
                     main_body.appendChild(exchange_info);
+
+                    if (message.data !== null) {
+                        // 创建擦亮按钮;
+                        var rub_button = document.createElement("button");
+                        rub_button.setAttribute("class", "exchange-button btn-sm rub_button");
+                        rub_button.textContent = "擦亮书摊";
+                        rub_button.onclick = function () {
+                            rub_book_booth();
+                        };
+                        main_body.appendChild(rub_button);
+                    }
 
                     var line = document.createElement("hr");
                     main_body.appendChild(line);
@@ -162,6 +172,31 @@ function ajax_book_booth() {
     });
 }
 
+function rub_book_booth() {
+    $.ajax({
+        type: "post",
+        url: "flea/bookBooth/rub",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+                    // 擦亮成功;
+                    ajax_book_booth();
+                }else{
+                    alert("用户已退出登录");
+                    clear_cache();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+        error: function(message){
+            alert("访问错误");
+        }
+    });
+}
+
 function add_user_info(container, name, value) {
     if (value === null) {
         value = "未设置";
@@ -184,7 +219,8 @@ function add_image(container, name, value) {
     var sub_value = document.createElement("td");
     var sub_image = document.createElement("img");
 
-    sub_image.src = value;
+    sub_image.src = "images/" + value;
+
     sub_image.style.height = "150px";
     sub_image.style.width = "150px";
 
@@ -281,12 +317,13 @@ function exchange_user_info(container, name, value, label_id) {
         sub_value = document.createElement("div");
         sub_value.setAttribute("id", label_id);
 
-        if (value === "男") {
-            sub_value.innerHTML = "<label><input type='radio' name='gender' value='0' checked>男</label>" +
-                "<label><input type='radio' name='gender' value='1'>女</label>"
-        }else {
+        if (value === "女") {
             sub_value.innerHTML = "<label><input type='radio' name='gender' value='0'>男</label>" +
                 "<label><input type='radio' name='gender' value='1' checked>女</label>"
+
+        }else {
+            sub_value.innerHTML = "<label><input type='radio' name='gender' value='0' checked>男</label>" +
+                "<label><input type='radio' name='gender' value='1'>女</label>"
         }
 
     }else if(label_id === "enterYear") {
@@ -380,6 +417,42 @@ function post_user_info() {
 
 function post_book_booth() {
 
+    var address_id = document.getElementById("booth_address").value;
+    var campus_id = document.getElementById("booth_campus").value;
+    var booth_name = document.getElementById("booth_name").value;
+    var booth_synopsis = document.getElementById("booth_synopsis").value;
+    var booth_icon = document.getElementById("image_window").src;
+
+    $.ajax({
+        type: "post",
+        url: "flea/bookBooth/modify",
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({
+            "addressId": address_id,
+            "campusId": campus_id,
+            "boothName": booth_name,
+            "synopsis": booth_synopsis,
+            "image_info": booth_icon,
+        }),
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+
+                    ajax_book_booth();
+                }else{
+                    alert("用户已退出登录");
+                    clear_cache();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+        error: function(){
+            alert("访问错误");
+        }
+    });
+
 }
 
 function exchange_book_booth(data) {
@@ -416,7 +489,7 @@ function exchange_book_booth(data) {
     data_icon = null;
     //创建内容并插入
     if (data !== null) {
-        data_username = data.username;
+        data_username = data.boothName;
         data_boothCampus = data.boothCampus;
         data_synopsis = data.synopsis;
         data_address = data.address;
@@ -477,28 +550,27 @@ function exchange_book_booth_value(container, name, value, label_id) {
         sub_image.setAttribute("id", "image_window");
         // sub_image.src = value;
         if (value !== null) {
-            sub_image.src = value;
+            sub_image.src = "images/" + value;
         }
         sub_image.style.height = "150px";
         sub_image.style.width = "150px";
         sub_image_div.appendChild(sub_image);
 
         sub_file_div = document.createElement("div");
-        sub_file_label = document.createElement("label");
-        sub_file_label.innerText = "选择图片";
-        sub_file_label.setAttribute("for", "input_file");
+
         sub_file_input = document.createElement("input");
         sub_file_input.type = "file";
         sub_file_input.setAttribute("id", "input_file");
-        sub_file_input.onclick = function () {
+        sub_file_input.accept = "image/png,image/jpeg";
+        sub_file_input.onchange = function () {
             image_change();
         };
 
-        sub_file_div.appendChild(sub_file_label);
         sub_file_div.appendChild(sub_file_input);
 
         sub_value.appendChild(sub_image_div);
         sub_value.appendChild(sub_file_div);
+
 
     }else {
         sub_value = document.createElement("input");
@@ -515,9 +587,16 @@ function exchange_book_booth_value(container, name, value, label_id) {
 
 function image_change() {
     var file = document.getElementById("input_file").files[0];
+
+    var size = file.size / 1024 / 2014;
+
+    if (size > 0.5) {
+        alert("图像过大");
+        return;
+    }
     var reader = new FileReader();
     reader.onloadend = function () {
-        $("#image_window").attr("style", "display:inline-block").attr("src", reader.result);
+        $("#image_window").attr("src", reader.result);
     };
     if (file) {
         reader.readAsDataURL(file);

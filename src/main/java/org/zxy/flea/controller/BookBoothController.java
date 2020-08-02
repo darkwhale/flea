@@ -10,7 +10,6 @@ import org.zxy.flea.dataobject.BookBooth;
 import org.zxy.flea.dataobject.User;
 import org.zxy.flea.form.BookBoothForm;
 import org.zxy.flea.service.impl.BookBoothServiceImpl;
-import org.zxy.flea.service.impl.UserServiceImpl;
 import org.zxy.flea.util.ResponseVOUtil;
 
 import javax.annotation.Resource;
@@ -24,16 +23,14 @@ public class BookBoothController {
     @Resource
     private BookBoothServiceImpl bookBoothService;
 
-    @Resource
-    private UserServiceImpl userService;
 
-    @PostMapping("/create")
-    ResponseVO<BookBoothVO> create(@Valid @RequestBody BookBoothForm bookBoothForm,
+    @PostMapping("/modify")
+    ResponseVO<BookBoothVO> modify(@Valid @RequestBody BookBoothForm bookBoothForm,
                                    HttpSession session) {
 
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
 
-        BookBooth bookBooth = bookBoothService.create(bookBoothForm, user.getUserId());
+        BookBooth bookBooth = bookBoothService.modify(bookBoothForm, user.getUserId());
 
         BookBoothVO bookBoothVO = bookBoothService.converter(bookBooth);
 
@@ -50,6 +47,18 @@ public class BookBoothController {
 
         return ResponseVOUtil.success(bookBoothVO);
     }
+
+    @PostMapping("/rub")
+    ResponseVO<BookBoothVO> rub(HttpSession session) {
+        User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
+
+        BookBooth bookBooth = bookBoothService.rub(user.getUserId());
+
+        BookBoothVO bookBoothVO = bookBoothService.converter(bookBooth);
+
+        return ResponseVOUtil.success(bookBoothVO);
+    }
+
 
     @GetMapping("/bookBooth")
     ResponseVO<BookBoothVO> bookBooth(HttpSession session) {
