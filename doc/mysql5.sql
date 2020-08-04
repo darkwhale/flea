@@ -61,10 +61,35 @@ create table `book_booth`(
 )engine=InnoDB default charset=utf8;
 
 -- 杂货摊表
--- drop table if exists `wares_booth`;
--- create table `wares_booth`(
---     `booth_id` varchar(32) not null comment '杂货摊id',
---     `user_email` varchar()
--- )
+drop table if exists `wares_booth`;
+create table `wares_booth`(
+    `booth_id` varchar(32) not null comment '杂货摊id',
+    `user_id` varchar(32) not null comment '用户id',
+    `address_id` int(4) comment '地址',
+    `booth_name` varchar(64) not null comment '小摊名',
+    `synopsis` varchar(256) not null comment '小摊简介',
+    `rub_time` int(32) not null default '0' comment '擦亮次数',
+    `icon` varchar(128) comment '图片地址',
+    `create_time` timestamp not null default current_timestamp comment '创建时间',
+	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
+	primary key(`booth_id`),
+	unique key `user_key` (`user_id`) using btree
+)engine=InnoDB default charset=utf8;
 
+-- 货物表
+drop table if exists `sales`;
+create table `sales`(
+    `sales_id` varchar(32) not null comment '商品id',
+    `user_id` varchar(32) not null comment '用户id',
+    `sales_name` varchar(64) not null comment '商品名称',
+    `synopsis` varchar(256) not null comment '商品简介',
+    `icon` varchar(128) not null comment '商品图片',
+    `sales_type` tinyint(1) not null default '0' comment '商品类型：0书籍，1杂货',
+    `new_level` int(4) not null default '10' comment '商品崭新度',
+    `items` varchar(128) not null comment '商品项',
+    `create_time` timestamp not null default current_timestamp comment '创建时间',
+	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
+	primary key(`sales_id`),
+	key `sales_user` (`user_id`) using btree
+)engine=InnoDB default charset=utf8;
 

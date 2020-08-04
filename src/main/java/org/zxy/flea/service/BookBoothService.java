@@ -6,8 +6,6 @@ import org.zxy.flea.VO.BookBoothVO;
 import org.zxy.flea.dataobject.BookBooth;
 import org.zxy.flea.form.BookBoothForm;
 
-import java.util.List;
-
 public interface BookBoothService {
 
     BookBooth getBooth(String userId);
@@ -18,9 +16,9 @@ public interface BookBoothService {
 
     BookBooth rub(String userId);
 
-    List<BookBooth> getBoothList(List<String> userIdList);
+//    List<BookBooth> getBoothList(List<String> userIdList);
 
-    Page<BookBooth> getBoothList(String boothName, Pageable pageable);
+//    Page<BookBooth> getBoothList(String boothName, Pageable pageable);
 
     Page<BookBooth> getBoothList(Pageable pageable);
 

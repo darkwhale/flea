@@ -6,20 +6,26 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class BookBoothForm {
-
-    @NotNull
-    private Integer addressId;
-
-    @NotNull
-    private Integer campusId;
+public class SalesUpdateForm {
 
     @NotEmpty
-    private String boothName;
+    private String salesId;
+
+    @NotEmpty
+    private String salesName;
 
     @NotEmpty
     private String synopsis;
 
+    @NotNull
+    private Integer salesType;
+
     private String image_info;
+
+    @NotNull
+    private Integer newLevel;
+
+    @NotEmpty
+    private String items;
 
 }

@@ -2,7 +2,6 @@ package org.zxy.flea.service.impl;
 
 
 import org.springframework.beans.BeanUtils;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +59,8 @@ public class BookBoothServiceImpl implements BookBoothService {
         BeanUtils.copyProperties(bookBoothForm, bookBooth);
 
         String imagePath = ImageUtil.saveImage("book", userId, bookBoothForm.getImage_info());
+
+
         if(imagePath != null) {
             bookBooth.setIcon(imagePath);
         }
@@ -76,6 +77,8 @@ public class BookBoothServiceImpl implements BookBoothService {
 
         bookBoothRepository.delete(bookBooth);
 
+        // todo 删除对应的商品;
+
         return bookBooth;
     }
 
@@ -90,15 +93,15 @@ public class BookBoothServiceImpl implements BookBoothService {
         return bookBoothRepository.save(bookBooth);
     }
 
-    @Override
-    public List<BookBooth> getBoothList(List<String> userIdList) {
-        return bookBoothRepository.findAllByUserIdIn(userIdList);
-    }
-
-    @Override
-    public Page<BookBooth> getBoothList(String boothName, Pageable pageable) {
-        return bookBoothRepository.findByBoothNameLike("%" + boothName + "%", pageable);
-    }
+//    @Override
+//    public List<BookBooth> getBoothList(List<String> userIdList) {
+//        return bookBoothRepository.findAllByUserIdIn(userIdList);
+//    }
+//
+//    @Override
+//    public Page<BookBooth> getBoothList(String boothName, Pageable pageable) {
+//        return bookBoothRepository.findByBoothNameLike("%" + boothName + "%", pageable);
+//    }
 
     @Override
     public Page<BookBooth> getBoothList(Pageable pageable) {

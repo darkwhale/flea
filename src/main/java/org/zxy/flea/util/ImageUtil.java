@@ -10,7 +10,7 @@ import java.io.OutputStream;
 @Slf4j
 public class ImageUtil {
 
-    public static String saveImage(String prefix, String userId, String imageInfo) {
+    public static String saveImage(String prefix, String imageId, String imageInfo){
 
         if (imageInfo == null)
             return null;
@@ -29,14 +29,13 @@ public class ImageUtil {
             byte[] b = decoder.decodeBuffer(imageInfo);
 
             //生成jpeg图片
-            String imgFilePath = FleaConst.IMAGE_DIR + prefix + userId + ".jpg";
-            log.info("imagePath: {}", imgFilePath);
+            String imgFilePath = FleaConst.IMAGE_DIR + prefix + imageId + ".jpg";
 
             OutputStream out = new FileOutputStream(imgFilePath);
             out.write(b);
             out.flush();
             out.close();
-            return prefix + userId + ".jpg";
+            return prefix + imageId + ".jpg";
         }
         catch (Exception e)
         {

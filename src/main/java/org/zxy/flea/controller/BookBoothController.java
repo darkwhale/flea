@@ -37,6 +37,14 @@ public class BookBoothController {
         return ResponseVOUtil.success(bookBoothVO);
     }
 
+    @GetMapping("userBooth")
+    ResponseVO<BookBoothVO> userBooth(@RequestParam("userId") String userId) {
+        BookBooth bookBooth = bookBoothService.getBooth(userId);
+
+        BookBoothVO bookBoothVO = bookBoothService.converter(bookBooth);
+        return ResponseVOUtil.success(bookBoothVO);
+    }
+
     @PostMapping("/close")
     ResponseVO<BookBoothVO> close(HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
@@ -91,7 +99,7 @@ public class BookBoothController {
         }
 
         if (!campusId.equals(-1) && !addressId.equals(-1)) {
-            bookBoothPage = bookBoothService.getBoothList(PageRequest.of(pageNum, pageSize));
+            bookBoothPage = bookBoothService.getBoothList(campusId, addressId, PageRequest.of(pageNum, pageSize));
         }
 
         return ResponseVOUtil.success(bookBoothService.converter(bookBoothPage, PageRequest.of(pageNum, pageSize)));

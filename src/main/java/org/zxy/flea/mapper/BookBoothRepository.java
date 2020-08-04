@@ -5,17 +5,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.zxy.flea.dataobject.BookBooth;
 
-import java.util.List;
-
 public interface BookBoothRepository extends JpaRepository<BookBooth, String> {
 
     BookBooth findByUserId(String userId);
 
-    List<BookBooth> findAllByUserIdIn(List<String> userIdList);
+//    List<BookBooth> findAllByUserIdIn(List<String> userIdList);
 
     Page<BookBooth> findAllByOrderByUpdateTimeDesc(Pageable pageable);
 
-    Page<BookBooth> findByBoothNameLike(String boothName, Pageable pageable);
+//    Page<BookBooth> findByBoothNameLike(String boothName, Pageable pageable);
 
     /**
      * 根据专业查询
