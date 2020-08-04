@@ -11,7 +11,7 @@ public class WaresBoothForm {
     @NotNull
     private Integer addressId;
 
-    @NotNull
+    @NotEmpty
     private String boothName;
 
     @NotEmpty

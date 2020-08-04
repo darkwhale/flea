@@ -411,7 +411,10 @@ function add_image(container, name, value) {
     var sub_value = document.createElement("td");
     var sub_image = document.createElement("img");
 
-    sub_image.src = "images/" + value + '?t='+(+new Date());
+    if (value !== null) {
+        sub_image.src = "images/" + value + '?t='+(+new Date());
+
+    }
 
     sub_image.style.height = "120px";
     sub_image.style.width = "120px";
@@ -852,6 +855,12 @@ function exchange_book_booth_value(container, name, value, label_id) {
         sub_value.appendChild(sub_file_div);
 
 
+    }else if(label_id === "booth_synopsis") {
+        sub_value = document.createElement("textarea");
+        sub_value.setAttribute("id", label_id);
+        sub_value.setAttribute("rows", "3");
+        sub_value.rows = 3;
+        sub_value.value = value;
     }else {
         sub_value = document.createElement("input");
         sub_value.setAttribute("id", label_id);
@@ -925,6 +934,11 @@ function exchange_wares_booth_value(container, name, value, label_id) {
         sub_value.appendChild(sub_file_div);
 
 
+    }else if(label_id === "booth_synopsis"){
+        sub_value = document.createElement("textarea");
+        sub_value.setAttribute("id", label_id);
+        sub_value.setAttribute("rows", "3");
+        sub_value.value = value;
     }else {
         sub_value = document.createElement("input");
         sub_value.setAttribute("id", label_id);

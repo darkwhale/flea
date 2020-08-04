@@ -147,7 +147,7 @@ function ajax_all_address_list() {
 
     return address_list;
 }
-//
+// 设置弹出窗口样式
 // window.alert = function (str) {
 //     var shield = document.createElement("DIV");
 //     p = document.createElement("p");
@@ -155,3 +155,7 @@ function ajax_all_address_list() {
 //
 //     p.textContent = str;
 // };
+
+function create_image_style(icon, sale_name) {
+
+}
