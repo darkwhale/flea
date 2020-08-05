@@ -337,6 +337,83 @@ function ajax_wares_booth() {
 
 }
 
+
+function ajax_sales_booth() {
+    var main_body = document.getElementById("main_body");
+
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+
+    exchange_info.onclick = function () {
+        add_sales(message.data);
+    };
+
+    exchange_info.textContent = "新建商品";
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+    $.ajax({
+        type: "get",
+        url: "flea/sales/userSales",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+
+                    //  数组为空，表示没有商品；
+                    if (message.data.length === 0) {
+                        var prompt_info = document.createElement("blockquote");
+
+                        var prompt_info_p = document.createElement("p");
+                        prompt_info_p.innerText = "您还没有展览任何商品哦，快去挂售吧～";
+
+                        var prompt_info_small = document.createElement("small");
+                        prompt_info_small.innerText = "一位善意的智者";
+
+                        prompt_info.appendChild(prompt_info_p);
+                        prompt_info.appendChild(prompt_info_small);
+
+                        main_body.appendChild(prompt_info);
+                    }else {
+                        for(index in message.data) {
+                            sales = message.data[index];
+                            create_sales_style(
+                                main_body,
+                                sales.salesId,
+                                sales.icon,
+                                sales.salesName,
+                                sales.synopsis,
+                                sales.newLevel,
+                                sales.items
+                                )
+                        }
+
+                    }
+                }else{
+                    alert("用户已退出登录");
+                    clear_cache();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+        error: function(message){
+            alert("访问错误");
+        }
+    });
+}
+
+function add_sales() {
+
+}
+
+
 function rub_book_booth() {
     $.ajax({
         type: "post",
@@ -416,8 +493,8 @@ function add_image(container, name, value) {
 
     }
 
-    sub_image.style.height = "120px";
-    sub_image.style.width = "120px";
+    sub_image.style.height = booth_image_size;
+    sub_image.style.width = booth_image_size;
 
     sub_value.appendChild(sub_image);
     sub_tr.appendChild(sub_label);
@@ -834,8 +911,8 @@ function exchange_book_booth_value(container, name, value, label_id) {
         if (value !== null) {
             sub_image.src = "images/" + value + '?t='+(+new Date());
         }
-        sub_image.style.height = "120px";
-        sub_image.style.width = "120px";
+        sub_image.style.height = booth_image_size;
+        sub_image.style.width = booth_image_size;
         sub_image_div.appendChild(sub_image);
 
         sub_file_div = document.createElement("div");
@@ -913,8 +990,8 @@ function exchange_wares_booth_value(container, name, value, label_id) {
         if (value !== null) {
             sub_image.src = "images/" + value + '?t='+(+new Date());
         }
-        sub_image.style.height = "120px";
-        sub_image.style.width = "120px";
+        sub_image.style.height = booth_image_size;
+        sub_image.style.width = booth_image_size;
         sub_image_div.appendChild(sub_image);
 
         sub_file_div = document.createElement("div");
@@ -964,8 +1041,8 @@ function image_change() {
     var reader = new FileReader();
     reader.onloadend = function () {
         $("#image_window").attr("src", reader.result).attr({
-            width: "120px",
-            height: "120px"
+            width: booth_image_size,
+            height: booth_image_size
         });
     };
     if (file) {

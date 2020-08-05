@@ -195,3 +195,30 @@
 .image-input-file{
 	margin-top: 1px;
 }
+
+.sales_info_div {
+	padding-left: 5px;
+}
+
+.sales_element_div{
+	background: #dddddd;
+	width: 100%;
+}
+
+.sales_info_div p {
+	margin: 0 auto;
+}
+
+.sales_name_info {
+	font-weight: bold;
+	padding-bottom: 10px;
+}
+
+.new_level_info {
+	font-weight: 600;
+}
+
+.synopsis_info {
+	font-weight: 400;
+	max-width: 100%;
+}
