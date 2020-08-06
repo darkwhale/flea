@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Data
 public class SalesUpdateForm {
@@ -18,7 +19,7 @@ public class SalesUpdateForm {
     private String synopsis;
 
     @NotNull
-    private Integer salesType;
+    private BigDecimal price;
 
     private String image_info;
 

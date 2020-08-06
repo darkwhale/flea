@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.zxy.flea.consts.FleaConst;
 import sun.misc.BASE64Decoder;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 @Slf4j
 public class ImageUtil {
@@ -41,5 +43,18 @@ public class ImageUtil {
         {
             return null;
         }
+    }
+
+    public static void deleteImage(String imagePath) {
+        File file = new File(imagePath);
+        file.delete();
+    }
+
+    public static void deleteImage(List<String> imagePathList) {
+        for (String imagePath: imagePathList) {
+            File file = new File(imagePath);
+            file.delete();
+        }
+
     }
 }

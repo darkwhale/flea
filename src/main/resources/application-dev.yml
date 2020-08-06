@@ -11,6 +11,11 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   jpa:
     show-sql: true
+  rabbitmq:
+    addresses: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 server:
   servlet:
     context-path: /flea

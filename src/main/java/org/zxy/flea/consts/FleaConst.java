@@ -6,4 +6,5 @@ public interface FleaConst {
 
     String IMAGE_DIR = "/Users/zxy/Documents/flea/web/images/";
 
+    String AMQP_QUEUE = "imageProcess";
 }

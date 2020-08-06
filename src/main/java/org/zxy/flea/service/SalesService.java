@@ -19,6 +19,14 @@ public interface SalesService {
 
     Sales delete(String salesId, String userId);
 
+    void deleteAll(String userId);
+
+    Sales onSale(String salesId, String userId);
+
+    Sales schedule(String salesId, String userId);
+
+    Sales offSale(String salesId, String userId);
+
     List<Sales> getList(int size);
 
     SalesVO converter(Sales sales);

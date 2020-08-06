@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.SalesVO;
 import org.zxy.flea.dataobject.Sales;
 import org.zxy.flea.enums.ResponseEnum;
+import org.zxy.flea.enums.SalesStatusEnum;
 import org.zxy.flea.exception.FleaException;
 import org.zxy.flea.form.SalesCreateForm;
 import org.zxy.flea.form.SalesUpdateForm;
@@ -15,7 +16,9 @@ import org.zxy.flea.util.KeyUtil;
 import org.zxy.flea.util.SalesRedisUtil;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,6 +55,11 @@ public class SalesServiceImpl implements SalesService {
             sales.setIcon(imagePath);
         }
 
+        salesRepository.save(sales);
+
+        // 添加入redis;
+        salesRedisUtil.add(key);
+
         return sales;
     }
 
@@ -70,6 +78,8 @@ public class SalesServiceImpl implements SalesService {
         if (imagePath != null) {
             sales.setIcon(imagePath);
         }
+
+        salesRepository.save(sales);
 
         return sales;
     }
@@ -90,6 +100,48 @@ public class SalesServiceImpl implements SalesService {
 
         salesRepository.delete(sales);
 
+        // 从redis删除
+        salesRedisUtil.delete(salesId);
+
+        // todo 删除图像；
+
+
+        return sales;
+    }
+
+    @Override
+    public Sales onSale(String salesId, String userId) {
+        return changeStatus(salesId, userId, SalesStatusEnum.ON_SALE.getCode());
+    }
+
+    @Override
+    public Sales schedule(String salesId, String userId) {
+        return changeStatus(salesId, userId, SalesStatusEnum.SCHEDULE.getCode());
+    }
+
+    @Override
+    public Sales offSale(String salesId, String userId) {
+        return changeStatus(salesId, userId, SalesStatusEnum.OFF_SALE.getCode());
+    }
+
+    private Sales changeStatus(String salesId, String userId, Integer status) {
+        Sales sales = salesRepository.findBySalesId(salesId);
+
+        // 查询为null，或用户不一致，则抛查询失败异常；
+        if (sales == null || !sales.getUserId().equals(userId)) {
+            throw new FleaException(ResponseEnum.SALES_NOT_EXIST);
+        }
+
+        sales.setStatus(status);
+
+        salesRepository.save(sales);
+
+        // 操作redis；
+        if (status.equals(SalesStatusEnum.ON_SALE.getCode())) {
+            salesRedisUtil.add(salesId);
+        }else {
+            salesRedisUtil.delete(salesId);
+        }
         return sales;
     }
 
@@ -99,6 +151,20 @@ public class SalesServiceImpl implements SalesService {
         BeanUtils.copyProperties(sales, salesVO);
 
         return salesVO;
+    }
+
+    @Override
+    public void deleteAll(String userId) {
+        List<Sales> salesList = salesRepository.findAllByUserId(userId);
+
+        // 删除数据库数据;
+        salesRepository.deleteAll(salesList);
+
+        // todo 删除图像;
+
+        //删除redis;
+        List<String> salesIdList = salesList.stream().map(Sales::getSalesId).collect(Collectors.toList());
+        salesRedisUtil.delete(salesIdList);
     }
 
     @Override
@@ -118,6 +184,10 @@ public class SalesServiceImpl implements SalesService {
         }
 
         List<String> salesIdList = salesRedisUtil.getRandSalesIdList(size);
-        return salesRepository.findAllBySalesIdIn(salesIdList);
+        List<Sales> result = salesRepository.findAllBySalesIdIn(salesIdList);
+
+        Random random = new Random(System.currentTimeMillis());
+        Collections.shuffle(result, random);
+        return result;
     }
 }

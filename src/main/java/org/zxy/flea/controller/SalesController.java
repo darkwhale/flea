@@ -66,6 +66,39 @@ public class SalesController {
         return ResponseVOUtil.success(salesVO);
     }
 
+    @PostMapping("/onSale")
+    ResponseVO<SalesVO> onSale(@RequestParam("salesId") String salesId,
+                               HttpSession session) {
+        User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
+
+        Sales sales = salesService.onSale(salesId, user.getUserId());
+        SalesVO salesVO = salesService.converter(sales);
+
+        return ResponseVOUtil.success(salesVO);
+    }
+
+    @PostMapping("/schedule")
+    ResponseVO<SalesVO> schedule(@RequestParam("salesId") String salesId,
+                                 HttpSession session) {
+        User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
+
+        Sales sales = salesService.schedule(salesId, user.getUserId());
+        SalesVO salesVO = salesService.converter(sales);
+
+        return ResponseVOUtil.success(salesVO);
+    }
+
+    @PostMapping("/offSale")
+    ResponseVO<SalesVO> offSale(@RequestParam("salesId") String salesId,
+                                HttpSession session) {
+        User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
+
+        Sales sales = salesService.offSale(salesId, user.getUserId());
+        SalesVO salesVO = salesService.converter(sales);
+
+        return ResponseVOUtil.success(salesVO);
+    }
+
     @GetMapping("/salesInfo")
     ResponseVO<SalesVO> salesInfo(@RequestParam("salesId") String salesId) {
         Sales sales = salesService.getSalesInfo(salesId);

@@ -1,12 +1,14 @@
 package org.zxy.flea.service.impl;
 
 
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.BookBoothVO;
+import org.zxy.flea.consts.FleaConst;
 import org.zxy.flea.dataobject.Address;
 import org.zxy.flea.dataobject.BookBooth;
 import org.zxy.flea.dataobject.Campus;
@@ -37,6 +39,12 @@ public class BookBoothServiceImpl implements BookBoothService {
 
     @Resource
     private CampusServiceImpl campusService;
+
+    @Resource
+    private SalesServiceImpl salesService;
+
+    @Resource
+    private AmqpTemplate amqpTemplate;
 
 
     @Override
@@ -77,7 +85,11 @@ public class BookBoothServiceImpl implements BookBoothService {
 
         bookBoothRepository.delete(bookBooth);
 
-        // todo 删除对应的商品;
+        salesService.deleteAll(userId);
+
+        // 消息队列，删除图像；
+        String imagePath = FleaConst.IMAGE_DIR + bookBooth.getIcon();
+        amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePath);
 
         return bookBooth;
     }

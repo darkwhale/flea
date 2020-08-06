@@ -210,63 +210,7 @@ function ajax_all_address_list() {
 // }
 
 
-function create_sales_style(container, salesId, icon, sale_name, synopsis, new_level, items) {
-    var parent_table = document.createElement("table");
-    parent_table.setAttribute("class", "sales_element_div");
-
-    var parent_tbody = document.createElement("tbody");
-    parent_table.appendChild(parent_tbody);
-
-    var parent_tr = document.createElement("tr");
-    parent_tbody.appendChild(parent_tr);
-
-    var image_td = document.createElement("td");
-    image_td.setAttribute("width", "15%");
-    parent_tr.appendChild(image_td);
-
-    var info_td = document.createElement("td");
-    info_td.setAttribute("class", "sales_info_div");
-    info_td.setAttribute("align", "left");
-    info_td.setAttribute("width", "85%");
-    parent_tr.appendChild(info_td);
-
-    var salesId_info = document.createElement("p");
-    salesId_info.hidden = true;
-    salesId_info.innerText = salesId;
-    parent_tr.appendChild(salesId_info);
-
-    var image_content = document.createElement("img");
-    image_content.style.width = sales_image_size;
-    image_content.style.height = sales_image_size;
-    image_content.src = "images/" + icon + '?t='+(+new Date());
-
-    image_td.appendChild(image_content);
-
-    var sale_name_info = document.createElement("p");
-    sale_name_info.setAttribute("class", "sales_name_info");
-    sale_name_info.innerText = sale_name;
-    var new_level_info = document.createElement("p");
-    new_level_info.setAttribute("class", "new_level_info");
-    new_level_info.innerText = new_level + "成新";
-    // new_level_info.innerText = new_level_list[new_level];
-    var items_info = document.createElement("p");
-    items_info.innerText = "书籍：" + items;
-    var synopsis_info = document.createElement("p");
-    synopsis_info.setAttribute("class", "synopsis_info");
-    synopsis_info.innerText = "简介：" + synopsis;
-
-    info_td.appendChild(sale_name_info);
-    info_td.appendChild(new_level_info);
-    info_td.appendChild(items_info);
-    info_td.appendChild(synopsis_info);
-
-    // 编辑和删除按钮
-    var control_div = document.createElement("div");
-
-    container.append(parent_table);
-}
-
-
 var booth_image_size = "120px";
 var sales_image_size = "120px";
-var new_level_list = ["一成新", "二成新", "三成新", "四成新", "五成新", "六成新", "七成新", "八成新", "九成新", "全新"];
+var new_level_list = ["10成新", "9成新", "8成新", "7成新", "6成新", "5成新", "4成新", "3成新", "2成新", "1成新"];
+var status_list = ["在售", "已预定", "已下架"];

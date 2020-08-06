@@ -2,6 +2,7 @@ package org.zxy.flea.VO;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -17,9 +18,13 @@ public class SalesVO {
 
     private String icon;
 
+    private BigDecimal price;
+
     private Integer salesType;
 
-    private Integer newLevel = 10;
+    private Integer status;
+
+    private Integer newLevel;
 
     private String items;
 

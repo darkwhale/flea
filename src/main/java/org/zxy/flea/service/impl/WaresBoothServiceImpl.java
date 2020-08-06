@@ -33,6 +33,9 @@ public class WaresBoothServiceImpl implements WaresBoothService {
     @Resource
     private AddressServiceImpl addressService;
 
+    @Resource
+    private SalesServiceImpl salesService;
+
     @Override
     public WaresBooth getBooth(String userId) {
         return waresBoothRepository.findByUserId(userId);
@@ -70,7 +73,9 @@ public class WaresBoothServiceImpl implements WaresBoothService {
 
         waresBoothRepository.delete(waresBooth);
 
-        // todo 删除对应的商品
+        salesService.deleteAll(userId);
+
+        // todo 删除图像；
 
         return waresBooth;
     }

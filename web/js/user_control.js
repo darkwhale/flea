@@ -17,7 +17,6 @@ $(document).ready(function(){
 
 });
 
-
 // 获取用户信息
 function ajax_user_info() {
     $.ajax({
@@ -348,14 +347,11 @@ function ajax_sales_booth() {
     exchange_info.setAttribute("class", "exchange-button btn-sm");
 
     exchange_info.onclick = function () {
-        add_sales(message.data);
+        edit_sales(null, null, null, null, null, null, null, null);
     };
 
     exchange_info.textContent = "新建商品";
     main_body.appendChild(exchange_info);
-
-    var line = document.createElement("hr");
-    main_body.appendChild(line);
 
     $.ajax({
         type: "get",
@@ -368,6 +364,10 @@ function ajax_sales_booth() {
 
                     //  数组为空，表示没有商品；
                     if (message.data.length === 0) {
+
+                        var line = document.createElement("hr");
+                        main_body.appendChild(line);
+
                         var prompt_info = document.createElement("blockquote");
 
                         var prompt_info_p = document.createElement("p");
@@ -381,18 +381,62 @@ function ajax_sales_booth() {
 
                         main_body.appendChild(prompt_info);
                     }else {
-                        for(index in message.data) {
-                            sales = message.data[index];
-                            create_sales_style(
-                                main_body,
-                                sales.salesId,
-                                sales.icon,
-                                sales.salesName,
-                                sales.synopsis,
-                                sales.newLevel,
-                                sales.items
+
+                        // 书籍类和杂货类分开
+                        var book_sales_list = message.data.filter(item => item.salesType === 0);
+                        var wares_sales_list = message.data.filter(item => item.salesType === 1);
+
+                        if (book_sales_list.length !== 0) {
+
+                            var line = document.createElement("hr");
+                            main_body.appendChild(line);
+
+                            var book_title = document.createElement("h4");
+                            book_title.innerText = "书籍类：";
+                            main_body.appendChild(book_title);
+
+                            for (index in book_sales_list) {
+                                sales = book_sales_list[index];
+                                create_sales_style(
+                                    main_body,
+                                    sales.salesId,
+                                    sales.price,
+                                    sales.icon,
+                                    sales.salesName,
+                                    sales.synopsis,
+                                    sales.newLevel,
+                                    sales.items,
+                                    sales.status
                                 )
+                            }
                         }
+
+                        if (wares_sales_list.length !== 0) {
+
+                            var line = document.createElement("hr");
+                            main_body.appendChild(line);
+
+                            var wares_title = document.createElement("h4");
+                            wares_title.innerText = "杂货类：";
+                            main_body.appendChild(wares_title);
+
+                            for (index in wares_sales_list) {
+                                sales = wares_sales_list[index];
+                                create_sales_style(
+                                    main_body,
+                                    sales.salesId,
+                                    sales.price,
+                                    sales.icon,
+                                    sales.salesName,
+                                    sales.synopsis,
+                                    sales.newLevel,
+                                    sales.items,
+                                    sales.status
+                                )
+                            }
+                        }
+                        var br = document.createElement("br");
+                        main_body.appendChild(br);
 
                     }
                 }else{
@@ -409,7 +453,168 @@ function ajax_sales_booth() {
     });
 }
 
-function add_sales() {
+function edit_sales(salesId, icon, price, sales_name, synopsis, new_level, items) {
+    var main_body = document.getElementById("main_body");
+
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+
+    exchange_info.onclick = function () {
+        save_sales(salesId);
+    };
+
+    exchange_info.textContent = "保存商品";
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+    var user_table = document.createElement("table");
+    user_table.style.border = "0px";
+    main_body.appendChild(user_table);
+
+    var user_table_body = document.createElement("tbody");
+    user_table.appendChild(user_table_body);
+
+    add_sales_element(user_table_body, "商品名", sales_name, "sales_name");
+    add_sales_element(user_table_body, "简介", synopsis, "synopsis");
+    add_sales_element(user_table_body, "价格", price, "price");
+
+    if (salesId === null) {
+        add_sales_element(user_table_body, "类型", null, "sales_type");
+    }
+    add_sales_element(user_table_body, "新旧度", new_level, "new_level");
+    add_sales_element(user_table_body, "商品项", items, "items");
+    add_sales_element(user_table_body, "图片", icon, "image_info");
+
+}
+
+function add_sales_element(container, name, value, element_id) {
+
+    var sub_div = document.createElement("tr");
+    container.appendChild(sub_div);
+    var sub_label = document.createElement("td");
+    sub_label.innerHTML = name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+    var sub_value_td = document.createElement("td");
+
+    if (element_id === "sales_type" || element_id === "new_level") {
+
+        if(element_id === "sales_type") {
+            info_list = ["书籍", "杂货"];
+        }else {
+            info_list = new_level_list;
+        }
+
+        sub_value = document.createElement("select");
+        sub_value.setAttribute("id", element_id);
+
+        for (index in info_list) {
+            info = info_list[index];
+            sub_option = document.createElement("option");
+
+            sub_option.value = index;
+            sub_option.innerText = info;
+
+            sub_value.appendChild(sub_option);
+        }
+    }else if (element_id === "image_info") {
+        sub_value = document.createElement("div");
+
+        sub_image_div = document.createElement("div");
+        sub_image = document.createElement("img");
+        sub_image.setAttribute("id", "image_window");
+        // sub_image.src = value;
+        if (value !== null) {
+            sub_image.src = "images/" + value + '?t='+(+new Date());
+        }
+        sub_image.style.height = sales_image_size;
+        sub_image.style.width = sales_image_size;
+        sub_image_div.appendChild(sub_image);
+
+        sub_file_div = document.createElement("div");
+
+        sub_file_input = document.createElement("input");
+        sub_file_input.type = "file";
+        sub_file_input.setAttribute("id", "input_file");
+        sub_file_input.setAttribute("class", "image-input-file");
+        sub_file_input.accept = "image/png,image/jpeg";
+        sub_file_input.onchange = function () {
+            image_change();
+        };
+
+        sub_file_div.appendChild(sub_file_input);
+
+        sub_value.appendChild(sub_image_div);
+        sub_value.appendChild(sub_file_div);
+    }else {
+        sub_value = document.createElement("input");
+        sub_value.setAttribute("id", element_id);
+        sub_value.setAttribute("type", "text");
+        sub_value.value = value;
+    }
+
+    sub_value_td.appendChild(sub_value);
+
+    sub_div.appendChild(sub_label);
+    sub_div.appendChild(sub_value_td);
+
+}
+
+// 保存商品信息；
+function save_sales(salesId) {
+
+    var sales_type = null;
+    var sales_name = document.getElementById("sales_name").value;
+    if (salesId === null) {
+        sales_type = document.getElementById("sales_type").value;
+    }
+    var synopsis = document.getElementById("synopsis").value;
+    var price = document.getElementById("price").value;
+    var new_level = document.getElementById("new_level").value;
+    var items = document.getElementById("items").value;
+    var image_info = document.getElementById("image_window").src;
+
+    if (salesId === null) {
+        dest_url = "create";
+    }else {
+        dest_url = "update";
+    }
+    $.ajax({
+        type: "post",
+        url: "flea/sales/" + dest_url,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({
+            "salesId": salesId,
+            "salesName": sales_name,
+            "synopsis": synopsis,
+            "price": price,
+            "salesType": sales_type,
+            "newLevel": 10 - new_level,
+            "items": items,
+            "image_info": image_info,
+
+        }),
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+                    ajax_sales_booth();
+                }else{
+                    alert("用户已退出登录");
+                    clear_cache();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+        error: function(message){
+            alert("访问错误");
+        }
+    });
 
 }
 
@@ -920,7 +1125,7 @@ function exchange_book_booth_value(container, name, value, label_id) {
         sub_file_input = document.createElement("input");
         sub_file_input.type = "file";
         sub_file_input.setAttribute("id", "input_file");
-        sub_file_input.setAttribute("class", "image-input-file")
+        sub_file_input.setAttribute("class", "image-input-file");
         sub_file_input.accept = "image/png,image/jpeg";
         sub_file_input.onchange = function () {
             image_change();
@@ -999,7 +1204,7 @@ function exchange_wares_booth_value(container, name, value, label_id) {
         sub_file_input = document.createElement("input");
         sub_file_input.type = "file";
         sub_file_input.setAttribute("id", "input_file");
-        sub_file_input.setAttribute("class", "image-input-file")
+        sub_file_input.setAttribute("class", "image-input-file");
         sub_file_input.accept = "image/png,image/jpeg";
         sub_file_input.onchange = function () {
             image_change();
@@ -1050,6 +1255,167 @@ function image_change() {
     }
 }
 
+
+function create_sales_style(container, salesId, price, icon, sale_name, synopsis, new_level, items, status) {
+    var parent_table = document.createElement("table");
+    parent_table.setAttribute("class", "sales_element_div");
+
+    var parent_tbody = document.createElement("tbody");
+    parent_table.appendChild(parent_tbody);
+
+    var parent_tr = document.createElement("tr");
+    parent_tbody.appendChild(parent_tr);
+
+    var image_td = document.createElement("td");
+    image_td.setAttribute("width", "12%");
+    parent_tr.appendChild(image_td);
+
+    var info_td = document.createElement("td");
+    info_td.setAttribute("class", "sales_info_div");
+    info_td.setAttribute("align", "left");
+    info_td.setAttribute("width", "58%");
+    parent_tr.appendChild(info_td);
+
+    var edit_td = document.createElement("td");
+    edit_td.setAttribute("width", "10%");
+    parent_tr.appendChild(edit_td);
+
+    var action_td = document.createElement("td");
+    action_td.setAttribute("width", "10%");
+    parent_tr.appendChild(action_td);
+
+    var close_td = document.createElement("td");
+    close_td.setAttribute("width", "10%");
+    parent_tr.appendChild(close_td);
+
+    //
+    // var salesId_info = document.createElement("p");
+    // salesId_info.hidden = true;
+    // salesId_info.innerText = salesId;
+    // parent_tr.appendChild(salesId_info);
+
+    var image_content = document.createElement("img");
+    image_content.style.width = sales_image_size;
+    image_content.style.height = sales_image_size;
+    image_content.src = "images/" + icon + '?t='+(+new Date());
+
+    image_td.appendChild(image_content);
+
+    var sale_name_info = document.createElement("p");
+    sale_name_info.setAttribute("class", "sales_name_info");
+    sale_name_info.innerText = sale_name;
+    var new_level_info = document.createElement("p");
+    new_level_info.setAttribute("class", "new_level_info");
+    new_level_info.innerText = new_level + "成新" + " " + price + "元";
+    // new_level_info.innerText = new_level_list[new_level];
+    var items_info = document.createElement("p");
+    items_info.innerText = "书籍：" + items;
+    var synopsis_info = document.createElement("p");
+    synopsis_info.setAttribute("class", "synopsis_info");
+    synopsis_info.innerText = "简介：" + synopsis;
+
+    info_td.appendChild(sale_name_info);
+    info_td.appendChild(new_level_info);
+    info_td.appendChild(items_info);
+    info_td.appendChild(synopsis_info);
+
+    var edit_button = document.createElement("button");
+    edit_button.setAttribute("class", "exchange-button btn-sm");
+    edit_button.textContent = "编辑";
+    edit_button.onclick = function () {
+        edit_sales(salesId, icon, price, sale_name, synopsis, new_level, items, status);
+    };
+    edit_td.appendChild(edit_button);
+
+    // 编辑和删除按钮
+    var action_button = document.createElement("button");
+    action_button.setAttribute("class", "exchange-button btn-sm");
+    action_button.textContent = status_list[status];
+    action_button.onclick = function() {
+        action_post(status, salesId);
+    };
+    action_td.appendChild(action_button);
+
+    var close_button = document.createElement("button");
+    close_button.setAttribute("class", "exchange-button btn-sm");
+    close_button.textContent = "删除商品";
+    close_button.onclick = function () {
+        close_post(salesId);
+    };
+    close_td.appendChild(close_button);
+
+    container.append(parent_table);
+}
+
+function action_post(status, salesId) {
+    var dest_api = null;
+    if (status === 0) {
+        dest_api = "schedule";
+    }else if (status === 1) {
+        dest_api = "offSale";
+    }else {
+        dest_api = "onSale";
+    }
+
+    $.ajax({
+        type: "post",
+        url: "flea/sales/" + dest_api,
+        contentType: "application/x-www-form-urlencoded",
+        data: {
+            "salesId": salesId,
+        },
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+
+                    ajax_sales_booth();
+                }else{
+                    alert("用户已退出登录");
+                    clear_cache();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+        error: function(message){
+            alert("访问错误");
+        }
+    });
+}
+
+function close_post(salesId) {
+    var confirm_info = window.confirm("您确定要删除此商品吗？");
+
+    if (confirm_info === true) {
+        $.ajax({
+            type: "post",
+            url: "flea/sales/delete",
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+                "salesId": salesId,
+            },
+            dataType: "json",
+            success: function(message){
+                if (message){
+                    if (message.code === 0) {
+
+                        ajax_sales_booth();
+                    }else{
+                        alert("用户已退出登录");
+                        clear_cache();
+                    }
+                }else {
+                    alert("数据错误");
+                }
+            },
+            error: function(message){
+                alert("访问错误");
+            }
+        });
+    }
+
+}
 
 
 
