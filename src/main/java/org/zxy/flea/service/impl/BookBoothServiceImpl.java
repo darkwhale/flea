@@ -40,8 +40,8 @@ public class BookBoothServiceImpl implements BookBoothService {
     @Resource
     private CampusServiceImpl campusService;
 
-    @Resource
-    private SalesServiceImpl salesService;
+//    @Resource
+//    private SalesServiceImpl salesService;
 
     @Resource
     private AmqpTemplate amqpTemplate;
@@ -85,7 +85,7 @@ public class BookBoothServiceImpl implements BookBoothService {
 
         bookBoothRepository.delete(bookBooth);
 
-        salesService.deleteAll(userId);
+//        salesService.deleteAll(userId);
 
         // 消息队列，删除图像；
         String imagePath = FleaConst.IMAGE_DIR + bookBooth.getIcon();

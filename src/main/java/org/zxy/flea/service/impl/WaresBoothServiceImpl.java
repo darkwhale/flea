@@ -35,8 +35,8 @@ public class WaresBoothServiceImpl implements WaresBoothService {
     @Resource
     private AddressServiceImpl addressService;
 
-    @Resource
-    private SalesServiceImpl salesService;
+//    @Resource
+//    private SalesServiceImpl salesService;
 
     @Resource
     private AmqpTemplate amqpTemplate;
@@ -78,7 +78,7 @@ public class WaresBoothServiceImpl implements WaresBoothService {
 
         waresBoothRepository.delete(waresBooth);
 
-        salesService.deleteAll(userId);
+//        salesService.deleteAll(userId);
 
         String imagePath = FleaConst.IMAGE_DIR + waresBooth.getIcon();
         amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePath);
