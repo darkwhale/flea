@@ -1,11 +1,13 @@
 package org.zxy.flea.service.impl;
 
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.WaresBoothVO;
+import org.zxy.flea.consts.FleaConst;
 import org.zxy.flea.dataobject.Address;
 import org.zxy.flea.dataobject.WaresBooth;
 import org.zxy.flea.enums.ResponseEnum;
@@ -35,6 +37,9 @@ public class WaresBoothServiceImpl implements WaresBoothService {
 
     @Resource
     private SalesServiceImpl salesService;
+
+    @Resource
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public WaresBooth getBooth(String userId) {
@@ -75,7 +80,8 @@ public class WaresBoothServiceImpl implements WaresBoothService {
 
         salesService.deleteAll(userId);
 
-        // todo 删除图像；
+        String imagePath = FleaConst.IMAGE_DIR + waresBooth.getIcon();
+        amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePath);
 
         return waresBooth;
     }

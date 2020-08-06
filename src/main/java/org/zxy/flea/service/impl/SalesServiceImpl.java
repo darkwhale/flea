@@ -1,8 +1,10 @@
 package org.zxy.flea.service.impl;
 
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.SalesVO;
+import org.zxy.flea.consts.FleaConst;
 import org.zxy.flea.dataobject.Sales;
 import org.zxy.flea.enums.ResponseEnum;
 import org.zxy.flea.enums.SalesStatusEnum;
@@ -32,6 +34,9 @@ public class SalesServiceImpl implements SalesService {
 
     @Resource
     private KeyUtil keyUtil;
+
+    @Resource
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public List<Sales> getListByUserId(String userId) {
@@ -103,8 +108,8 @@ public class SalesServiceImpl implements SalesService {
         // 从redis删除
         salesRedisUtil.delete(salesId);
 
-        // todo 删除图像；
-
+        String imagePath = FleaConst.IMAGE_DIR + sales.getIcon();
+        amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePath);
 
         return sales;
     }
@@ -161,6 +166,8 @@ public class SalesServiceImpl implements SalesService {
         salesRepository.deleteAll(salesList);
 
         // todo 删除图像;
+        List<String> imagePathList = salesList.stream().map(Sales::getIcon).collect(Collectors.toList());
+        amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePathList);
 
         //删除redis;
         List<String> salesIdList = salesList.stream().map(Sales::getSalesId).collect(Collectors.toList());
