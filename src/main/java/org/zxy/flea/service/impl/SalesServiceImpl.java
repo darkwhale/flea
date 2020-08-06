@@ -167,7 +167,7 @@ public class SalesServiceImpl implements SalesService {
 
         // todo 删除图像;
         List<String> imagePathList = salesList.stream().map(Sales::getIcon).collect(Collectors.toList());
-        amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePathList);
+        amqpTemplate.convertAndSend(FleaConst.AMPQ_QUEUE_BATCH, imagePathList);
 
         //删除redis;
         List<String> salesIdList = salesList.stream().map(Sales::getSalesId).collect(Collectors.toList());
