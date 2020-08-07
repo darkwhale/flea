@@ -43,55 +43,76 @@ create table `campus`(
     primary key(`campus_id`)
 )engine=InnoDB default charset=utf8;
 
--- 书摊表
-drop table if exists `book_booth`;
-create table `book_booth`(
-    `booth_id` varchar(32) not null comment '书摊id',
-    `user_id` varchar(32) not null comment '用户id',
-    `address_id` int(4) comment '地址',
-    `campus_id` int(4) comment '专业',
-    `booth_name` varchar(64) not null comment '小摊名',
-    `synopsis` varchar(256) not null comment '小摊简介',
-    `rub_time` int(32) not null default '0' comment '擦亮次数',
-    `icon` varchar(128) comment '图片地址',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
-	primary key(`booth_id`),
-	unique key `user_key` (`user_id`) using btree
-)engine=InnoDB default charset=utf8;
+-- -- 书摊表
+-- drop table if exists `book_booth`;
+-- create table `book_booth`(
+--     `booth_id` varchar(32) not null comment '书摊id',
+--     `user_id` varchar(32) not null comment '用户id',
+--     `address_id` int(4) comment '地址',
+--     `campus_id` int(4) comment '专业',
+--     `booth_name` varchar(64) not null comment '小摊名',
+--     `synopsis` varchar(256) not null comment '小摊简介',
+--     `rub_time` int(32) not null default '0' comment '擦亮次数',
+--     `icon` varchar(128) comment '图片地址',
+--     `create_time` timestamp not null default current_timestamp comment '创建时间',
+-- 	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
+-- 	primary key(`booth_id`),
+-- 	unique key `user_key` (`user_id`) using btree
+-- )engine=InnoDB default charset=utf8;
+--
+-- -- 杂货摊表
+-- drop table if exists `wares_booth`;
+-- create table `wares_booth`(
+--     `booth_id` varchar(32) not null comment '杂货摊id',
+--     `user_id` varchar(32) not null comment '用户id',
+--     `address_id` int(4) comment '地址',
+--     `booth_name` varchar(64) not null comment '小摊名',
+--     `synopsis` varchar(256) not null comment '小摊简介',
+--     `rub_time` int(32) not null default '0' comment '擦亮次数',
+--     `icon` varchar(128) comment '图片地址',
+--     `create_time` timestamp not null default current_timestamp comment '创建时间',
+-- 	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
+-- 	primary key(`booth_id`),
+-- 	unique key `user_key` (`user_id`) using btree
+-- )engine=InnoDB default charset=utf8;
 
--- 杂货摊表
-drop table if exists `wares_booth`;
-create table `wares_booth`(
-    `booth_id` varchar(32) not null comment '杂货摊id',
-    `user_id` varchar(32) not null comment '用户id',
-    `address_id` int(4) comment '地址',
-    `booth_name` varchar(64) not null comment '小摊名',
-    `synopsis` varchar(256) not null comment '小摊简介',
-    `rub_time` int(32) not null default '0' comment '擦亮次数',
-    `icon` varchar(128) comment '图片地址',
-    `create_time` timestamp not null default current_timestamp comment '创建时间',
-	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
-	primary key(`booth_id`),
-	unique key `user_key` (`user_id`) using btree
-)engine=InnoDB default charset=utf8;
-
--- 货物表
-drop table if exists `sales`;
-create table `sales`(
+-- 书籍表
+drop table if exists `book_sales`;
+create table `book_sales`(
     `sales_id` varchar(32) not null comment '商品id',
     `user_id` varchar(32) not null comment '用户id',
     `sales_name` varchar(64) not null comment '商品名称',
     `synopsis` varchar(256) not null comment '商品简介',
     `price` float not null comment '商品价格',
     `icon` varchar(128) comment '商品图片',
-    `sales_type` tinyint(1) not null default '0' comment '商品类型：0书籍，1杂货',
+    `sales_campus_id` int(4) not null comment '专业',
     `new_level` int(4) not null default '10' comment '商品崭新度',
     `status` int(4) not null default '0' comment '商品状态：0在售，1预定，2已卖出',
     `items` varchar(128) not null comment '商品项',
+    `rub_time` int(32) not null default '0' comment '擦亮次数',
     `create_time` timestamp not null default current_timestamp comment '创建时间',
 	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
 	primary key(`sales_id`),
 	key `sales_user` (`user_id`) using btree
 )engine=InnoDB default charset=utf8;
 
+
+-- 货物表
+drop table if exists `wares_sales`;
+create table `wares_sales`(
+    `sales_id` varchar(32) not null comment '商品id',
+    `user_id` varchar(32) not null comment '用户id',
+    `sales_name` varchar(64) not null comment '商品名称',
+    `synopsis` varchar(256) not null comment '商品简介',
+    `price` float not null comment '商品价格',
+    `icon` varchar(128) comment '商品图片',
+    `sales_address_id` int(4) not null comment '地址',
+    `new_level` int(4) not null default '10' comment '商品崭新度',
+    `status` int(4) not null default '0' comment '商品状态：0在售，1预定，2已卖出',
+    `items` varchar(128) not null comment '商品项',
+    `rub_time` int(32) not null default '0' comment '擦亮次数',
+    `create_time` timestamp not null default current_timestamp comment '创建时间',
+	`update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
+	primary key(`sales_id`),
+	key `sales_user` (`user_id`) using btree
+)engine=InnoDB default charset=utf8;

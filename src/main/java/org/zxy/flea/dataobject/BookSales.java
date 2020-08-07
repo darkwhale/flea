@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Entity
 @Data
-@DynamicInsert
+@Entity
 @DynamicUpdate
-public class Sales {
+@DynamicInsert
+public class BookSales {
 
     @Id
     private String salesId;
@@ -27,7 +27,7 @@ public class Sales {
 
     private String icon;
 
-    private Integer salesType;
+    private Integer salesCampusId;
 
     private BigDecimal price;
 
@@ -36,6 +36,8 @@ public class Sales {
     private Integer status = SalesStatusEnum.ON_SALE.getCode();
 
     private String items;
+
+    private Integer rubTime = 0;
 
     private Date createTime;
 

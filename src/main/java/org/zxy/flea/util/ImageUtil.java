@@ -46,14 +46,23 @@ public class ImageUtil {
     }
 
     public static void deleteImage(String imagePath) {
-        File file = new File(imagePath);
-        file.delete();
+        try{
+            File file = new File(imagePath);
+            file.delete();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void deleteImage(List<String> imagePathList) {
-        for (String imagePath: imagePathList) {
-            File file = new File(imagePath);
-            file.delete();
+        try {
+            for (String imagePath: imagePathList) {
+                File file = new File(imagePath);
+                file.delete();
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
         }
 
     }

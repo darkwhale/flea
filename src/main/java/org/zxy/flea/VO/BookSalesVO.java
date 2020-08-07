@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class SalesVO {
+public class BookSalesVO {
 
     private String salesId;
 
@@ -18,15 +18,17 @@ public class SalesVO {
 
     private String icon;
 
+    private String salesCampus;
+
     private BigDecimal price;
-
-    private Integer salesType;
-
-    private Integer status;
 
     private Integer newLevel;
 
+    private Integer status;
+
     private String items;
+
+    private Integer rubTime;
 
     private Date createTime;
 

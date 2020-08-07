@@ -7,7 +7,10 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Data
-public class SalesCreateForm {
+public class BookSalesUpdateForm {
+
+    @NotEmpty
+    private String salesId;
 
     @NotEmpty
     private String salesName;
@@ -15,18 +18,17 @@ public class SalesCreateForm {
     @NotEmpty
     private String synopsis;
 
-    private String image_info;
+    @NotNull
+    private Integer salesCampusId;
 
     @NotNull
     private BigDecimal price;
 
-    @NotNull
-    private Integer salesType;
+    private String image_info;
 
     @NotNull
     private Integer newLevel;
 
     @NotEmpty
     private String items;
-
 }

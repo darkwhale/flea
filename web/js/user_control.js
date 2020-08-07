@@ -84,7 +84,7 @@ function ajax_book_booth() {
 
     $.ajax({
         type: "get",
-        url: "flea/bookBooth/bookBooth",
+        url: "flea/bookBooth/userSales",
         dataType: "json",
         success: function(message){
             if (message){
@@ -99,15 +99,10 @@ function ajax_book_booth() {
                     exchange_info.setAttribute("class", "exchange-button btn-sm");
 
                     exchange_info.onclick = function () {
-                        exchange_book_booth(message.data);
+                        edit_book_sales(message.data);
                     };
 
-                    if (message.data === null) {
-                        // 添加创建按钮；
-                        exchange_info.textContent = "创建书摊";
-                    }else {
-                        exchange_info.textContent = "编辑书摊";
-                    }
+                    exchange_info.textContent = "添加书籍";
                     main_body.appendChild(exchange_info);
 
                     if (message.data !== null) {
@@ -141,7 +136,7 @@ function ajax_book_booth() {
                         var prompt_info = document.createElement("blockquote");
 
                         var prompt_info_p = document.createElement("p");
-                        prompt_info_p.innerText = "您还没有书摊，快去创建吧～";
+                        prompt_info_p.innerText = "您还没有添加书籍哦，快去创建吧～";
 
                         var prompt_info_small = document.createElement("small");
                         prompt_info_small.innerText = "一位善意的智者";
@@ -152,20 +147,22 @@ function ajax_book_booth() {
                         main_body.appendChild(prompt_info);
                     }else {
                         // 创建表格
-                        var user_table = document.createElement("table");
-                        // user_table.style.border = "0px";
-                        main_body.appendChild(user_table);
 
-                        var user_table_body = document.createElement("tbody");
-                        user_table.appendChild(user_table_body);
-
-                        //创建内容并插入
-                        add_user_info(user_table_body, "小摊名:", message.data.boothName);
-                        add_user_info(user_table_body, "专业:", message.data.boothCampus);
-                        add_user_info(user_table_body, "小摊位置:", message.data.address);
-                        add_user_info(user_table_body, "小摊简介:", message.data.synopsis);
-
-                        add_image(user_table_body, "小摊图片", message.data.icon);
+                        for (index in message.data) {
+                            sales = message.data[index];
+                            create_sales_style(
+                                main_body,
+                                sales.salesId,
+                                sales.salesCampus,
+                                sales.price,
+                                sales.icon,
+                                sales.salesName,
+                                sales.synopsis,
+                                sales.newLevel,
+                                sales.items,
+                                sales.status
+                            )
+                        }
                     }
 
                 }else{
@@ -467,6 +464,46 @@ function edit_sales(salesId, icon, price, sales_name, synopsis, new_level, items
     };
 
     exchange_info.textContent = "保存商品";
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+    var user_table = document.createElement("table");
+    user_table.style.border = "0px";
+    main_body.appendChild(user_table);
+
+    var user_table_body = document.createElement("tbody");
+    user_table.appendChild(user_table_body);
+
+    add_sales_element(user_table_body, "商品名", sales_name, "sales_name");
+    add_sales_element(user_table_body, "简介", synopsis, "synopsis");
+    add_sales_element(user_table_body, "价格", price, "price");
+
+    if (salesId === null) {
+        add_sales_element(user_table_body, "类型", null, "sales_type");
+    }
+    add_sales_element(user_table_body, "新旧度", new_level, "new_level");
+    add_sales_element(user_table_body, "商品项", items, "items");
+    add_sales_element(user_table_body, "图片", icon, "image_info");
+
+}
+
+
+function edit_book_sales(salesId, campus, icon, price, sales_name, synopsis, new_level, items) {
+    var main_body = document.getElementById("main_body");
+
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+
+    exchange_info.onclick = function () {
+        save_book_sales(salesId);
+    };
+
+    exchange_info.textContent = "保存";
     main_body.appendChild(exchange_info);
 
     var line = document.createElement("hr");
@@ -1256,7 +1293,7 @@ function image_change() {
 }
 
 
-function create_sales_style(container, salesId, price, icon, sale_name, synopsis, new_level, items, status) {
+function create_sales_style(container, salesId, campus, price, icon, sale_name, synopsis, new_level, items, status) {
     var parent_table = document.createElement("table");
     parent_table.setAttribute("class", "sales_element_div");
 
@@ -1267,14 +1304,18 @@ function create_sales_style(container, salesId, price, icon, sale_name, synopsis
     parent_tbody.appendChild(parent_tr);
 
     var image_td = document.createElement("td");
-    image_td.setAttribute("width", "12%");
+    image_td.setAttribute("width", "10%");
     parent_tr.appendChild(image_td);
 
     var info_td = document.createElement("td");
     info_td.setAttribute("class", "sales_info_div");
     info_td.setAttribute("align", "left");
-    info_td.setAttribute("width", "58%");
+    info_td.setAttribute("width", "50%");
     parent_tr.appendChild(info_td);
+
+    var campus_td = document.createElement("td");
+    campus_td.setAttribute("width", "10%");
+    parent_tr.appendChild(campus_td);
 
     var edit_td = document.createElement("td");
     edit_td.setAttribute("width", "10%");
@@ -1318,6 +1359,10 @@ function create_sales_style(container, salesId, price, icon, sale_name, synopsis
     info_td.appendChild(new_level_info);
     info_td.appendChild(items_info);
     info_td.appendChild(synopsis_info);
+
+    var campus_info = document.createElement("strong");
+    campus_info.innerText = campus;
+    campus_td.appendChild(campus_info);
 
     var edit_button = document.createElement("button");
     edit_button.setAttribute("class", "exchange-button btn-sm");

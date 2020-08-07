@@ -4,7 +4,7 @@ public interface FleaConst {
 
     String CURRENT_USER = "current_user";
 
-    String IMAGE_DIR = "/Users/zxy/IdeaProjects/flea/web/images/";
+    String IMAGE_DIR = "/Users/zxy/Documents/flea/web/images/";
 
     String AMQP_QUEUE = "imageProcess";
 

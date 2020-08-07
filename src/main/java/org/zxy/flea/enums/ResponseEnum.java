@@ -26,13 +26,7 @@ public enum ResponseEnum {
     CAPMUS_NOT_EXIST(11, "学院不存在"),
 
 
-    BOOK_BOOTH_EXIST(20, "书摊已存在"),
-
-    BOOK_BOOTH_NOT_EXIST(21, "书摊不存在"),
-
-    WARES_BOOTH_NOT_EXIST(22, "杂货摊不存在"),
-
-    SALES_NOT_EXIST(30, "商品不存在"),
+    SALES_NOT_EXIST(20, "商品不存在"),
 
 
     PARAM_ERROR(50, "输入参数有误"),
