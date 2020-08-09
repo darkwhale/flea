@@ -201,7 +201,7 @@
 }
 
 .sales_element_div{
-	background: #dddddd;
+	background: #eeeeee;
 	width: 100%;
 	margin-bottom: 5px;
 }
@@ -215,6 +215,10 @@
 	padding-bottom: 10px;
 }
 
+.contact-div{
+	padding-left: 20px;
+}
+
 .new_level_info {
 	font-weight: 600;
 }
@@ -222,4 +226,20 @@
 .synopsis_info {
 	font-weight: 400;
 	max-width: 100%;
+}
+
+.mover:hover {
+	background: #dedede;
+	cursor: pointer
+}
+
+.manager_line {
+	border-bottom: 5px;
+}
+
+.manager-button {
+	background-color: #eeeeee;
+}
+.manager-button:hover {
+	background-color: #00dd00;
 }

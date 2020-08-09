@@ -23,7 +23,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NullPointerException.class)
-    public ResponseVO nullPointHandler() {
+    public ResponseVO nullPointHandler(Exception e) {
+        e.printStackTrace();
         return ResponseVOUtil.error(ResponseEnum.ERROR);
     }
 }

@@ -1,7 +1,11 @@
 package org.zxy.flea.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.WaresSalesVO;
 import org.zxy.flea.consts.FleaConst;
@@ -22,6 +26,7 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class WaresSalesServiceImpl implements WaresSalesService {
 
@@ -213,5 +218,24 @@ public class WaresSalesServiceImpl implements WaresSalesService {
     @Override
     public List<WaresSalesVO> converter(List<WaresSales> waresSalesList) {
         return waresSalesList.stream().map(this::converter).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<WaresSales> getListByAddressId(Integer salesAddressId, Pageable pageable) {
+
+        if (salesAddressId == null) {
+            return waresSalesRepository.findAllByStatusOrderByUpdateTimeDesc(SalesStatusEnum.ON_SALE.getCode(), pageable);
+        }else {
+            return waresSalesRepository.findAllByStatusAndSalesAddressIdOrderByUpdateTimeDesc(SalesStatusEnum.ON_SALE.getCode(), salesAddressId, pageable);
+        }
+
+    }
+
+    @Override
+    public Page<WaresSalesVO> converter(Page<WaresSales> waresSalesPage, Pageable pageable) {
+        List<WaresSalesVO> waresSalesVOList = waresSalesPage.getContent().stream()
+                .map(this::converter).collect(Collectors.toList());
+
+        return new PageImpl<>(waresSalesVOList, pageable, waresSalesPage.getTotalElements());
     }
 }

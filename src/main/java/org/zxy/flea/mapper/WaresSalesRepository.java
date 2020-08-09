@@ -1,5 +1,7 @@
 package org.zxy.flea.mapper;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.zxy.flea.dataobject.WaresSales;
 
@@ -17,4 +19,8 @@ public interface WaresSalesRepository extends JpaRepository<WaresSales, String> 
      * @return 返回商品列表
      */
     List<WaresSales> findAllBySalesIdIn(List<String> salesIdList);
+
+    Page<WaresSales> findAllByStatusOrderByUpdateTimeDesc(Integer status, Pageable pageable);
+
+    Page<WaresSales> findAllByStatusAndSalesAddressIdOrderByUpdateTimeDesc(Integer status, Integer addressId, Pageable pageable);
 }

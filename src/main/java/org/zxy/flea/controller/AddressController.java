@@ -8,7 +8,7 @@ import org.zxy.flea.dataobject.Address;
 import org.zxy.flea.enums.AddressTypeEnum;
 import org.zxy.flea.form.AddressForm;
 import org.zxy.flea.form.AddressUpdateForm;
-import org.zxy.flea.service.AddressService;
+import org.zxy.flea.service.impl.AddressServiceImpl;
 import org.zxy.flea.util.ResponseVOUtil;
 
 import javax.annotation.Resource;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class AddressController {
 
     @Resource
-    private AddressService addressService;
+    private AddressServiceImpl addressService;
 
     @PostMapping("/add")
     ResponseVO<Address> add(@Valid @RequestBody AddressForm addressForm) {
@@ -67,8 +67,8 @@ public class AddressController {
     }
 
     @GetMapping("/regionList")
-    ResponseVO<Set<String>> regionList() {
-        Set<String> addressList = addressService.getRegionList();
+    ResponseVO<Set<Address>> regionList() {
+        Set<Address> addressList = addressService.getRegionList();
 
         return ResponseVOUtil.success(addressList);
     }

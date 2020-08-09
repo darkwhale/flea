@@ -47,6 +47,10 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return addressRegion + " " + addressFloor;
+        if (addressFloor != null) {
+            return addressRegion + " " + addressFloor;
+        }else {
+            return addressRegion;
+        }
     }
 }

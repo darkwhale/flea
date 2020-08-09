@@ -23,5 +23,5 @@ public interface AddressService {
 
     List<Address> getFilter(AddressTypeEnum addressTypeEnum);
 
-    Set<String> getRegionList();
+    Set<Address> getRegionList();
 }

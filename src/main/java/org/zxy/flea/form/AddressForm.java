@@ -14,6 +14,5 @@ public class AddressForm {
     @NotBlank
     private String addressRegion;
 
-    @NotBlank
     private String addressFloor;
 }

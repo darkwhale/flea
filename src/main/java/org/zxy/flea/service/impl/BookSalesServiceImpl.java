@@ -2,6 +2,9 @@ package org.zxy.flea.service.impl;
 
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.BookSalesVO;
 import org.zxy.flea.consts.FleaConst;
@@ -105,7 +108,7 @@ public class BookSalesServiceImpl implements BookSalesService {
         // 从redis删除
         salesRedisUtil.delete(salesId);
 
-        // 删除图像；
+        // 删除图像；只删除非默认的图像；
         if(bookSales.getIcon() != null) {
             String imagePath = FleaConst.IMAGE_DIR + bookSales.getIcon();
             amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePath);
@@ -122,7 +125,6 @@ public class BookSalesServiceImpl implements BookSalesService {
         // 删除数据库数据;
         bookSalesRepository.deleteAll(bookSalesList);
 
-        // todo 删除图像;
         List<String> imagePathList = bookSalesList.stream()
                 .map(e -> FleaConst.IMAGE_DIR + e.getIcon()).collect(Collectors.toList())
                 .stream()
@@ -162,6 +164,26 @@ public class BookSalesServiceImpl implements BookSalesService {
     @Override
     public BookSales offSale(String salesId, String userId) {
         return changeStatus(salesId, userId, SalesStatusEnum.OFF_SALE.getCode());    }
+
+    @Override
+    public Page<BookSalesVO> converter(Page<BookSales> bookSalesPage, Pageable pageable) {
+
+        List<BookSalesVO> bookSalesVOList = bookSalesPage.getContent().stream()
+                .map(this::converter).collect(Collectors.toList());
+
+        return new PageImpl<>(bookSalesVOList, pageable, bookSalesPage.getTotalElements());
+    }
+
+    @Override
+    public Page<BookSales> getListByCampusId(Integer salesCampusId, Pageable pageable) {
+
+        if (salesCampusId == null) {
+            return bookSalesRepository.findAllByStatusOrderByUpdateTimeDesc(SalesStatusEnum.ON_SALE.getCode(), pageable);
+        }else {
+            return bookSalesRepository.findAllByStatusAndSalesCampusIdOrderByUpdateTimeDesc(SalesStatusEnum.ON_SALE.getCode(), salesCampusId, pageable);
+        }
+
+    }
 
     private BookSales changeStatus(String salesId, String userId, Integer status) {
         BookSales bookSales = bookSalesRepository.findBySalesId(salesId);

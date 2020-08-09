@@ -238,8 +238,37 @@ function ajax_all_region_list() {
 //     container.append(parent_div);
 // }
 
+function GetRequest(name) {
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+        }
+    }
+    return theRequest;
+}
+
+
+function normal_icon(sales, type) {
+    if (sales.icon === null) {
+        if (type === 0) {
+            return_icon = book_default_icon;
+        }else {
+            return_icon = wares_default_icon;
+        }
+    }
+    return return_icon;
+}
+
 
 var booth_image_size = "120px";
 var sales_image_size = "120px";
 var new_level_list = ["10成新", "9成新", "8成新", "7成新", "6成新", "5成新", "4成新", "3成新", "2成新", "1成新"];
 var status_list = ["在售", "已预定", "已下架"];
+var book_default_icon = "book_default.jpg";
+var wares_default_icon = "wares_default.jpg";
+
+var address_type_list = ["宿舍地址", "学习地址"];

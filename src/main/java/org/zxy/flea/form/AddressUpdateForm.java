@@ -17,7 +17,6 @@ public class AddressUpdateForm {
     @NotBlank
     private String addressRegion;
 
-    @NotBlank
     private String addressFloor;
 
 }

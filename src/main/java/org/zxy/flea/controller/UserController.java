@@ -85,7 +85,7 @@ public class UserController {
         return ResponseVOUtil.success(userPage);
     }
 
-    @PostMapping("/findById")
+    @GetMapping("/findById")
     ResponseVO<UserVO> findById(@RequestParam("userId") String userId) {
         User user = userService.findByUserId(userId);
 

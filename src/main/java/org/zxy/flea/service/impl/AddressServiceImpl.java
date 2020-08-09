@@ -94,11 +94,11 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Cacheable(cacheNames = "addressList", key = "125")
-    public Set<String> getRegionList() {
+    public Set<Address> getRegionList() {
         List<Address> addressList = addressRepository.findAll();
 
         return addressList.stream()
-                .map(Address::getAddressRegion).collect(Collectors.toSet());
+                .filter(e -> e.getAddressFloor() == null).collect(Collectors.toSet());
     }
 
 }

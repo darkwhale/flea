@@ -1,5 +1,7 @@
 package org.zxy.flea.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import org.zxy.flea.VO.ResponseVO;
 import org.zxy.flea.VO.WaresSalesVO;
@@ -50,8 +52,8 @@ public class WaresSalesController {
         return ResponseVOUtil.success();
     }
 
-    @PostMapping("/closeBookBooth")
-    ResponseVO closeBookBooth(HttpSession session) {
+    @PostMapping("/close")
+    ResponseVO close(HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
         waresSalesService.deleteAll(user.getUserId());
         return ResponseVOUtil.success();
@@ -119,5 +121,17 @@ public class WaresSalesController {
 
         return ResponseVOUtil.success(waresSalesVO);
     }
+
+
+    @GetMapping("/getByAddress")
+    ResponseVO<Page<WaresSalesVO>> getByAddress(@RequestParam(value = "addressId", required = false) Integer addressId,
+                                              @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
+                                              @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
+        Page<WaresSales> waresSalesPage = waresSalesService.getListByAddressId(addressId, PageRequest.of(pageNum, pageSize));
+        Page<WaresSalesVO> waresSalesVOPage = waresSalesService.converter(waresSalesPage, PageRequest.of(pageNum, pageSize));
+
+        return ResponseVOUtil.success(waresSalesVOPage);
+    }
+
 
 }

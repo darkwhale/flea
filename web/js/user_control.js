@@ -214,7 +214,6 @@ function close_wares_booth() {
         success: function(message){
             if (message){
                 if (message.code === 0) {
-                    // 擦亮成功;
                     ajax_wares_booth();
                 }else{
                     alert("用户已退出登录");

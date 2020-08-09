@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/mycss.css">
     <script src="js/jquery.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
-    <script type="text/javascript" src="js/user.js"></script>
+    <script type="text/javascript" src="js/info.js"></script>
     <title>跳蚤学院</title>
 
 </head>
@@ -49,15 +49,10 @@
 </nav>
 <div class="container container-body">
     <div class="row">
-        <div class="col-md-2">
-            <h2 class="index-title"><a href="javascript:void(0)" onclick="ajax_user_info();" class="index-link">个人信息</a></h2>
-            <h2 class="index-title"><a href="javascript:void(0)" onclick="ajax_book_booth();" class="index-link">我的书摊</a></h2>
-            <h2 class="index-title"><a href="javascript:void(0)" onclick="ajax_wares_booth();" class="index-link">我的杂货摊</a></h2>
-            <h2 class="index-title" id="campus_manager"><a href="javascript:void(0)" onclick="ajax_campus_manager();" class="index-link">专业管理</a></h2>
-            <h2 class="index-title" id="address_manager"><a href="javascript:void(0)" onclick="ajax_address_manager();" class="index-link">地址管理</a></h2>
+        <div class="col-md-3" id="left_container">
         </div>
 
-        <div class="col-md-10 left-border" id="main_body">
+        <div class="col-md-9 left-border" id="main_body">
         </div>
     </div>
 </div>

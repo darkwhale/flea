@@ -20,7 +20,7 @@ public class CampusController {
     private CampusServiceImpl campusService;
 
     @PostMapping("/add")
-    ResponseVO<Campus> add(@RequestParam String campusName) {
+    ResponseVO<Campus> add(@RequestParam("campusName") String campusName) {
         Campus campus = campusService.add(campusName);
 
         return ResponseVOUtil.success(campus);
@@ -34,7 +34,7 @@ public class CampusController {
     }
 
     @PostMapping("/delete")
-    ResponseVO<Campus> delete(@RequestParam Integer campusId) {
+    ResponseVO<Campus> delete(@RequestParam("campusId") Integer campusId) {
         Campus campus = campusService.delete(campusId);
 
         return ResponseVOUtil.success(campus);

@@ -15,6 +15,8 @@ public class UserVO {
 
     private String userCampus;
 
+    private Integer role;
+
     private String userQq;
 
     private String userWx;

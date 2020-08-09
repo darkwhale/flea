@@ -1,5 +1,7 @@
 package org.zxy.flea.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.zxy.flea.VO.BookSalesVO;
 import org.zxy.flea.dataobject.BookSales;
 import org.zxy.flea.form.BookSalesCreateForm;
@@ -33,4 +35,9 @@ public interface BookSalesService {
     BookSalesVO converter(BookSales bookSales);
 
     List<BookSalesVO> converter(List<BookSales> bookSalesList);
+
+    Page<BookSales> getListByCampusId(Integer salesCampusId, Pageable pageable);
+
+    Page<BookSalesVO> converter(Page<BookSales> bookSalesPage, Pageable pageable);
+
 }

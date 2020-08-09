@@ -12,6 +12,12 @@ $(document).ready(function(){
         $("#logout").text("退出");
     }
 
+    var root_manager = getCookie("role");
+    if (root_manager !== "1") {
+        $('#campus_manager').hide();
+        $('#address_manager').hide();
+    }
+
     ajax_user_info();
 
 });
@@ -78,7 +84,7 @@ function ajax_user_info() {
 }
 
 function add_user_info(container, name, value) {
-    if (value === null) {
+    if (value === null || value === "") {
         value = "未设置";
     }
     var sub_tr = document.createElement("tr");
@@ -349,6 +355,7 @@ function ajax_book_booth() {
 
                         for (index in message.data) {
                             sales = message.data[index];
+
                             create_book_style(
                                 main_body,
                                 sales
@@ -357,8 +364,7 @@ function ajax_book_booth() {
                     }
 
                 }else{
-                    alert("用户已退出登录");
-                    clear_cache();
+                    alert("数据错误");
                     window.location = get_main_url();
                 }
             }else {
@@ -443,6 +449,7 @@ function ajax_wares_booth() {
 
                         for (index in message.data) {
                             sales = message.data[index];
+
                             create_wares_style(
                                 main_body,
                                 sales
@@ -501,16 +508,12 @@ function create_book_style(container, sales) {
     close_td.setAttribute("width", "10%");
     parent_tr.appendChild(close_td);
 
-    //
-    // var salesId_info = document.createElement("p");
-    // salesId_info.hidden = true;
-    // salesId_info.innerText = salesId;
-    // parent_tr.appendChild(salesId_info);
-
     var image_content = document.createElement("img");
     image_content.style.width = sales_image_size;
     image_content.style.height = sales_image_size;
-    image_content.src = "images/" + sales.icon + '?t='+(+new Date());
+
+    image_icon = normal_icon(sales, 0);
+    image_content.src = "images/" + image_icon + '?t='+(+new Date());
 
     image_td.appendChild(image_content);
 
@@ -522,7 +525,7 @@ function create_book_style(container, sales) {
     new_level_info.innerText = sales.newLevel + "成新" + " " + sales.price + "元";
     // new_level_info.innerText = new_level_list[new_level];
     var items_info = document.createElement("p");
-    items_info.innerText = "书籍：" + sales.items;
+    items_info.innerText = "价格：" + sales.items;
     var synopsis_info = document.createElement("p");
     synopsis_info.setAttribute("class", "synopsis_info");
     synopsis_info.innerText = "简介：" + sales.synopsis;
@@ -610,7 +613,9 @@ function create_wares_style(container, sales) {
     var image_content = document.createElement("img");
     image_content.style.width = sales_image_size;
     image_content.style.height = sales_image_size;
-    image_content.src = "images/" + sales.icon + '?t='+(+new Date());
+
+    image_icon = normal_icon(sales, 1);
+    image_content.src = "images/" + image_icon + '?t='+(+new Date());
 
     image_td.appendChild(image_content);
 
@@ -622,7 +627,7 @@ function create_wares_style(container, sales) {
     new_level_info.innerText = sales.newLevel + "成新" + " " + sales.price + "元";
     // new_level_info.innerText = new_level_list[new_level];
     var items_info = document.createElement("p");
-    items_info.innerText = "书籍：" + sales.items;
+    items_info.innerText = "价格：" + sales.items;
     var synopsis_info = document.createElement("p");
     synopsis_info.setAttribute("class", "synopsis_info");
     synopsis_info.innerText = "简介：" + sales.synopsis;
@@ -865,7 +870,7 @@ function add_sales_element(container, name, value, element_id) {
         if(element_id === "campus") {
             info_list = ajax_campus_list();
         }else if (element_id === "address") {
-            info_list = ajax_all_address_list();
+            info_list = ajax_all_region_list();
         }else {
             info_list = new_level_list;
         }
@@ -882,7 +887,7 @@ function add_sales_element(container, name, value, element_id) {
                 sub_option.innerText = info.campusName;
             }else if(element_id === "address") {
                 sub_option.value = info.addressId;
-                sub_option.innerText = info.addressRegion + " " + info.addressFloor;
+                sub_option.innerText = info.addressRegion;
             }else {
                 sub_option.value = index;
                 sub_option.innerText = info;
@@ -1096,7 +1101,7 @@ function save_wares_sales(salesId) {
         success: function(message){
             if (message){
                 if (message.code === 0) {
-                    ajax_book_booth();
+                    ajax_wares_booth();
                 }else{
                     alert("数据错误");
                 }
@@ -1114,7 +1119,7 @@ function save_wares_sales(salesId) {
 function close_book_booth() {
     $.ajax({
         type: "post",
-        url: "flea/bookBooth/closeBookBooth",
+        url: "flea/bookBooth/close",
         contentType: "application/json;charset=utf-8",
         dataType: "json",
         success: function(message){
@@ -1201,4 +1206,534 @@ function action_wares_post(status, salesId) {
             alert("访问错误");
         }
     });
+}
+
+
+function close_wares_booth() {
+    $.ajax({
+        type: "post",
+        url: "flea/waresBooth/close",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+                    ajax_wares_booth();
+                }else{
+                    alert("用户已退出登录");
+                    clear_cache();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+        error: function(message){
+            alert("访问错误");
+        }
+    });
+}
+
+function ajax_campus_manager() {
+
+    var main_body = document.getElementById("main_body");
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    // 添加修改按钮；
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+    exchange_info.textContent = "添加专业";
+    exchange_info.onclick = function () {
+        edit_campus(null);
+    };
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+    var user_table = document.createElement("table");
+    // user_table.style.border = "0px";
+    main_body.appendChild(user_table);
+
+    var user_table_body = document.createElement("tbody");
+    user_table.appendChild(user_table_body);
+
+
+    // 获取campuslist
+    $.ajax({
+        type: "get",
+        url: "flea/campus/getList",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+                    //写专业信息
+                    if (message.data.length === 0) {
+
+                        var prompt_info = document.createElement("blockquote");
+
+                        var prompt_info_p = document.createElement("p");
+                        prompt_info_p.innerText = "您还没有添加书籍哦，快去创建吧～";
+
+                        var prompt_info_small = document.createElement("small");
+                        prompt_info_small.innerText = "一位善意的智者";
+
+                        prompt_info.appendChild(prompt_info_p);
+                        prompt_info.appendChild(prompt_info_small);
+
+                        main_body.appendChild(prompt_info);
+                    }else {
+
+                        var campus_table  = document.createElement("table");
+                        campus_table.setAttribute("class", "table manager_line");
+                        main_body.appendChild(campus_table);
+
+                        var campus_thread = document.createElement("thread");
+                        campus_table.appendChild(campus_thread);
+
+                        for (index in message.data) {
+                            campus = message.data[index];
+                            show_campus_info(campus_table, campus);
+                        }
+                    }
+
+                }else{
+                    alert("数据错误");
+                    window.location = get_main_url();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+
+    });
+
+}
+
+function show_campus_info(container, campus) {
+
+    var campus_tr = document.createElement("tr");
+    container.appendChild(campus_tr);
+
+    var campus_th = document.createElement("th");
+    campus_th.innerText = campus.campusName;
+    campus_tr.appendChild(campus_th);
+
+    var edit_th = document.createElement("th");
+    campus_tr.appendChild(edit_th);
+
+    var delete_th = document.createElement("th");
+    campus_tr.appendChild(delete_th);
+
+
+    var edit_button = document.createElement("button");
+    edit_button.setAttribute("class", "manager-button btn-sm");
+    edit_button.textContent = "编辑";
+    edit_button.onclick = function () {
+        edit_campus(campus);
+    };
+    edit_th.appendChild(edit_button);
+
+    var delete_button = document.createElement("button");
+    delete_button.setAttribute("class", "manager-button btn-sm");
+    delete_button.textContent = "删除";
+    delete_button.onclick = function () {
+        delete_campus(campus);
+    };
+    delete_th.appendChild(delete_button);
+
+}
+
+function edit_campus(campus) {
+    var main_body = document.getElementById("main_body");
+
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+
+    campusId = null;
+    if (campus !== null) {
+        campusId = campus.campusId;
+    }
+
+    exchange_info.onclick = function () {
+        save_campus(campusId);
+    };
+
+    exchange_info.textContent = "保存专业";
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+    var label = document.createElement("label");
+    label.innerHTML = "专业:&nbsp;&nbsp;";
+    main_body.appendChild(label);
+
+    var campus_input = document.createElement("input");
+    campus_input.setAttribute("id", "campus_input");
+    if (campus !== null) {
+        campus_input.value = campus.campusName;
+    }
+    main_body.appendChild(campus_input)
+
+
+}
+
+function save_campus(campusId) {
+
+    campusName = document.getElementById("campus_input").value;
+
+    if (campusId === null) {
+        dest_url = "add";
+        content_type = "application/x-www-form-urlencoded";
+        dest_data = {
+            "campusName": campusName,
+        };
+    }else {
+        dest_url = "update";
+        content_type = "application/json;charset=utf-8";
+        dest_data = JSON.stringify({"campusId": campusId, "campusName": campusName});
+    }
+
+    $.ajax({
+        type: "post",
+        url: "flea/campus/" + dest_url,
+        contentType: content_type,
+        data: dest_data,
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+
+                    ajax_campus_manager();
+                }else{
+                    alert("权限不足或未知错误");
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+
+    });
+}
+
+function delete_campus(campus) {
+    var confirm_info = window.confirm("您确定要删除此专业吗？");
+
+    if (confirm_info === true) {
+        $.ajax({
+            type: "post",
+            url: "flea/campus/delete",
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+                "campusId": campus.campusId,
+            },
+            dataType: "json",
+            success: function(message){
+                if (message){
+                    if (message.code === 0) {
+
+                        ajax_campus_manager();
+                    }else{
+                        alert("权限不足或未知错误");
+                    }
+                }else {
+                    alert("数据错误");
+                }
+            },
+
+        });
+    }
+}
+
+// 地址管理；
+
+function ajax_address_manager() {
+
+    var main_body = document.getElementById("main_body");
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    // 添加修改按钮；
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+    exchange_info.textContent = "添加地址";
+    exchange_info.onclick = function () {
+        edit_address(null);
+    };
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+    var user_table = document.createElement("table");
+    // user_table.style.border = "0px";
+    main_body.appendChild(user_table);
+
+    var user_table_body = document.createElement("tbody");
+    user_table.appendChild(user_table_body);
+
+
+    // 获取addresslist
+    $.ajax({
+        type: "get",
+        url: "flea/address/floorList",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+                    //写专业信息
+                    if (message.data.length === 0) {
+
+                        var prompt_info = document.createElement("blockquote");
+
+                        var prompt_info_p = document.createElement("p");
+                        prompt_info_p.innerText = "您还没有添加地址哦，快去创建吧～";
+
+                        var prompt_info_small = document.createElement("small");
+                        prompt_info_small.innerText = "一位善意的智者";
+
+                        prompt_info.appendChild(prompt_info_p);
+                        prompt_info.appendChild(prompt_info_small);
+
+                        main_body.appendChild(prompt_info);
+                    }else {
+
+                        var address_table  = document.createElement("table");
+                        address_table.setAttribute("class", "table manager_line");
+                        main_body.appendChild(address_table);
+
+                        var address_thread = document.createElement("thread");
+                        address_table.appendChild(address_thread);
+
+                        for (index in message.data) {
+                            address = message.data[index];
+                            if (address.addressFloor === null || address.addressFloor === "") {
+                                show_address_info(address_table, address);
+                            }
+                        }
+                        for (index in message.data) {
+                            address = message.data[index];
+                            if (!(address.addressFloor === null || address.addressFloor === "")) {
+                                show_address_info(address_table, address);
+                            }
+                        }
+                    }
+
+                }else{
+                    alert("数据错误");
+                    window.location = get_main_url();
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+
+    });
+
+}
+
+function show_address_info(container, address) {
+
+    var address_tr = document.createElement("tr");
+    container.appendChild(address_tr);
+
+    var region_th = document.createElement("th");
+    region_th.innerText = address.addressRegion;
+    address_tr.appendChild(region_th);
+
+    var floor_th = document.createElement("th");
+    floor_th.innerText = address.addressFloor;
+    address_tr.appendChild(floor_th);
+
+    var type_th = document.createElement("th");
+    type_th.innerText = address_type_list[address.addressType];
+    address_tr.appendChild(type_th);
+
+    var edit_th = document.createElement("th");
+    address_tr.appendChild(edit_th);
+
+    var delete_th = document.createElement("th");
+    address_tr.appendChild(delete_th);
+
+
+    var edit_button = document.createElement("button");
+    edit_button.setAttribute("class", "manager-button btn-sm");
+    edit_button.textContent = "编辑";
+    edit_button.onclick = function () {
+        edit_address(address);
+    };
+    edit_th.appendChild(edit_button);
+
+    var delete_button = document.createElement("button");
+    delete_button.setAttribute("class", "manager-button btn-sm");
+    delete_button.textContent = "删除";
+    delete_button.onclick = function () {
+        delete_address(address);
+    };
+    delete_th.appendChild(delete_button);
+
+}
+
+function edit_address(address) {
+    var main_body = document.getElementById("main_body");
+
+    // 清空main_body内容
+    main_body.innerHTML = "";
+
+    var exchange_info = document.createElement("button");
+    exchange_info.setAttribute("class", "exchange-button btn-sm");
+
+    addressId = null;
+    if (address !== null) {
+        addressId = address.addressId;
+    }
+
+    exchange_info.onclick = function () {
+        save_address(addressId);
+    };
+
+    exchange_info.textContent = "保存地址";
+    main_body.appendChild(exchange_info);
+
+    var line = document.createElement("hr");
+    main_body.appendChild(line);
+
+
+    var address_table = document.createElement("table");
+    address_table.style.border = "0px";
+    main_body.appendChild(address_table);
+
+    var address_table_body = document.createElement("tbody");
+    address_table.appendChild(address_table_body);
+
+    address_region = null;
+    address_floor = null;
+    address_type = null;
+    if(address !== null) {
+        address_region = address.addressRegion;
+        address_floor = address.addressFloor;
+        address_type = address.addressType;
+    }
+
+    exchange_address_info(address_table_body, "区域", address_region, "address_region");
+    exchange_address_info(address_table_body, "单元", address_floor, "address_floor");
+    exchange_address_info(address_table_body, "类型", address_type, "address_type");
+
+}
+
+function exchange_address_info(container, name, value, value_id) {
+
+    var sub_div = document.createElement("tr");
+    container.appendChild(sub_div);
+
+    var sub_label = document.createElement("td");
+    sub_label.innerHTML = name + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    sub_div.appendChild(sub_label);
+
+    var sub_value_td = document.createElement("td");
+    sub_div.appendChild(sub_value_td);
+
+    if (value_id === "address_type") {
+        info_list = address_type_list;
+
+        sub_value = document.createElement("select");
+        sub_value.setAttribute("id", value_id);
+
+        for (index in address_type_list) {
+            info = address_type_list[index];
+            sub_option = document.createElement("option");
+
+            sub_option.value = index;
+            sub_option.innerText = info;
+
+            if (value === index || (value !== null &&value.toString() === index.toString())) {
+                sub_option.selected = true;
+            }
+
+            sub_value.appendChild(sub_option);
+
+        }
+    }else {
+        sub_value = document.createElement("input");
+        sub_value.setAttribute("id", value_id);
+        sub_value.setAttribute("type", "text");
+        sub_value.value = value;
+    }
+
+    sub_value_td.appendChild(sub_value);
+
+}
+
+function save_address(addressId) {
+
+    addressRegion = document.getElementById("address_region").value;
+    addressFloor = document.getElementById("address_floor").value;
+    addressType = document.getElementById("address_type").value;
+
+    if (addressId === null) {
+        dest_url = "add";
+    }else {
+        dest_url = "update";
+    }
+
+    $.ajax({
+        type: "post",
+        url: "flea/address/" + dest_url,
+        contentType: "application/json;charset=utf-8",
+        data: JSON.stringify({
+            "addressId": addressId,
+            "addressRegion": addressRegion,
+            "addressFloor": addressFloor,
+            "addressType": addressType,
+        }),
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+
+                    ajax_address_manager();
+                }else{
+                    alert("权限不足或未知错误");
+                }
+            }else {
+                alert("数据错误");
+            }
+        },
+
+    });
+}
+
+function delete_address(address) {
+    var confirm_info = window.confirm("您确定要删除此地址吗？");
+
+    if (confirm_info === true) {
+        $.ajax({
+            type: "post",
+            url: "flea/address/delete",
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+                "addressId": address.addressId,
+            },
+            dataType: "json",
+            success: function(message){
+                if (message){
+                    if (message.code === 0) {
+
+                        ajax_address_manager();
+                    }else{
+                        alert("权限不足或未知错误");
+                    }
+                }else {
+                    alert("数据错误");
+                }
+            },
+
+        });
+    }
 }

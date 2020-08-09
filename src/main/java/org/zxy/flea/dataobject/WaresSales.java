@@ -42,4 +42,6 @@ public class WaresSales {
     private Date createTime;
 
     private Date updateTime;
+
+
 }
