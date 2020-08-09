@@ -283,6 +283,7 @@ function GetRequest(name) {
 
 
 function normal_icon(sales, type) {
+    var return_icon = sales.icon;
     if (sales.icon === null) {
         if (type === 0) {
             return_icon = book_default_icon;
@@ -290,6 +291,7 @@ function normal_icon(sales, type) {
             return_icon = wares_default_icon;
         }
     }
+
     return return_icon;
 }
 
