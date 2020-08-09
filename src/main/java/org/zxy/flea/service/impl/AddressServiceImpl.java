@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.zxy.flea.dataobject.Address;
 import org.zxy.flea.enums.AddressTypeEnum;
 import org.zxy.flea.enums.ResponseEnum;
@@ -89,7 +90,9 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<Address> getFilter(AddressTypeEnum addressTypeEnum) {
 
-        return addressRepository.findByAddressType(addressTypeEnum.getCode());
+        List<Address> addressList = addressRepository.findByAddressType(addressTypeEnum.getCode());
+
+        return addressList.stream().filter(e -> !StringUtils.isEmpty(e.getAddressFloor())).collect(Collectors.toList());
     }
 
     @Override
@@ -98,7 +101,14 @@ public class AddressServiceImpl implements AddressService {
         List<Address> addressList = addressRepository.findAll();
 
         return addressList.stream()
-                .filter(e -> e.getAddressFloor() == null).collect(Collectors.toSet());
+                .filter(e -> StringUtils.isEmpty(e.getAddressFloor())).collect(Collectors.toSet());
     }
 
+    @Override
+    @Cacheable(cacheNames = "addressList", key = "126")
+    public Set<Address> getNonRegionList() {
+        List<Address> addressList = addressRepository.findAll();
+
+        return addressList.stream()
+                .filter(e -> !StringUtils.isEmpty(e.getAddressFloor())).collect(Collectors.toSet());    }
 }

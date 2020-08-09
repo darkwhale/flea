@@ -14,10 +14,12 @@ import java.util.Date;
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class BookSales {
+public class Sales {
 
     @Id
     private String salesId;
+
+    private Integer salesType;
 
     private String userId;
 
@@ -28,6 +30,8 @@ public class BookSales {
     private String icon;
 
     private Integer salesCampusId;
+
+    private Integer salesAddressId;
 
     private BigDecimal price;
 

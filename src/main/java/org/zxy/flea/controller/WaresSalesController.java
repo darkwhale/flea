@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import org.zxy.flea.VO.ResponseVO;
 import org.zxy.flea.VO.WaresSalesVO;
 import org.zxy.flea.consts.FleaConst;
+import org.zxy.flea.dataobject.Sales;
 import org.zxy.flea.dataobject.User;
-import org.zxy.flea.dataobject.WaresSales;
 import org.zxy.flea.form.WaresSalesCreateForm;
 import org.zxy.flea.form.WaresSalesUpdateForm;
 import org.zxy.flea.service.impl.WaresSalesServiceImpl;
@@ -30,7 +30,7 @@ public class WaresSalesController {
     ResponseVO<List<WaresSalesVO>> userSales(HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
 
-        List<WaresSales> bookSalesList = waresSalesService.getListByUserId(user.getUserId());
+        List<Sales> bookSalesList = waresSalesService.getListByUserId(user.getUserId());
 
         List<WaresSalesVO> waresSalesVOList = waresSalesService.converter(bookSalesList);
         return ResponseVOUtil.success(waresSalesVOList);
@@ -39,7 +39,7 @@ public class WaresSalesController {
     @GetMapping("/salesList")
     ResponseVO<List<WaresSalesVO>> salesList(@RequestParam("userId") String userId) {
 
-        List<WaresSales> waresSalesList = waresSalesService.getListByUserId(userId);
+        List<Sales> waresSalesList = waresSalesService.getListByUserId(userId);
 
         List<WaresSalesVO> waresSalesVOList = waresSalesService.converter(waresSalesList);
         return ResponseVOUtil.success(waresSalesVOList);
@@ -63,7 +63,7 @@ public class WaresSalesController {
     ResponseVO<WaresSalesVO> create(@Valid @RequestBody WaresSalesCreateForm waresSalesCreateForm,
                                     HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
-        WaresSales waresSales = waresSalesService.create(waresSalesCreateForm, user.getUserId());
+        Sales waresSales = waresSalesService.create(waresSalesCreateForm, user.getUserId());
 
         WaresSalesVO waresSalesVO = waresSalesService.converter(waresSales);
 
@@ -74,7 +74,7 @@ public class WaresSalesController {
     ResponseVO<WaresSalesVO> update(@Valid @RequestBody WaresSalesUpdateForm waresSalesUpdateForm,
                                     HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
-        WaresSales waresSales = waresSalesService.update(waresSalesUpdateForm, user.getUserId());
+        Sales waresSales = waresSalesService.update(waresSalesUpdateForm, user.getUserId());
 
         WaresSalesVO waresSalesVO = waresSalesService.converter(waresSales);
 
@@ -85,7 +85,7 @@ public class WaresSalesController {
     ResponseVO<WaresSalesVO> delete(@RequestParam("salesId") String salesId,
                                    HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
-        WaresSales waresSales = waresSalesService.delete(salesId, user.getUserId());
+        Sales waresSales = waresSalesService.delete(salesId, user.getUserId());
 
         WaresSalesVO waresSalesVO = waresSalesService.converter(waresSales);
 
@@ -96,7 +96,7 @@ public class WaresSalesController {
     ResponseVO<WaresSalesVO> onSale(@RequestParam("salesId") String salesId,
                                     HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
-        WaresSales waresSales = waresSalesService.onSale(salesId, user.getUserId());
+        Sales waresSales = waresSalesService.onSale(salesId, user.getUserId());
         WaresSalesVO waresSalesVO = waresSalesService.converter(waresSales);
 
         return ResponseVOUtil.success(waresSalesVO);
@@ -106,7 +106,7 @@ public class WaresSalesController {
     ResponseVO<WaresSalesVO> schedule(@RequestParam("salesId") String salesId,
                                       HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
-        WaresSales waresSales = waresSalesService.schedule(salesId, user.getUserId());
+        Sales waresSales = waresSalesService.schedule(salesId, user.getUserId());
         WaresSalesVO waresSalesVO = waresSalesService.converter(waresSales);
 
         return ResponseVOUtil.success(waresSalesVO);
@@ -116,7 +116,7 @@ public class WaresSalesController {
     ResponseVO<WaresSalesVO> offSale(@RequestParam("salesId") String salesId,
                                      HttpSession session) {
         User user = (User) session.getAttribute(FleaConst.CURRENT_USER);
-        WaresSales waresSales = waresSalesService.offSale(salesId, user.getUserId());
+        Sales waresSales = waresSalesService.offSale(salesId, user.getUserId());
         WaresSalesVO waresSalesVO = waresSalesService.converter(waresSales);
 
         return ResponseVOUtil.success(waresSalesVO);
@@ -127,7 +127,7 @@ public class WaresSalesController {
     ResponseVO<Page<WaresSalesVO>> getByAddress(@RequestParam(value = "addressId", required = false) Integer addressId,
                                               @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
                                               @RequestParam(value = "pageSize", defaultValue = "20") Integer pageSize) {
-        Page<WaresSales> waresSalesPage = waresSalesService.getListByAddressId(addressId, PageRequest.of(pageNum, pageSize));
+        Page<Sales> waresSalesPage = waresSalesService.getListByAddressId(addressId, PageRequest.of(pageNum, pageSize));
         Page<WaresSalesVO> waresSalesVOPage = waresSalesService.converter(waresSalesPage, PageRequest.of(pageNum, pageSize));
 
         return ResponseVOUtil.success(waresSalesVOPage);

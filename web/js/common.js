@@ -177,6 +177,36 @@ function ajax_all_region_list() {
     return address_list;
 }
 
+
+function ajax_all_floor_list() {
+    $.ajax({
+        type: "get",
+        async: false,
+        url: "flea/address/nonRegionList",
+        contentType: "application/json;charset=utf-8",
+        dataType: "json",
+        success: function(message){
+            if (message){
+                if (message.code === 0) {
+                    // 写cookie
+                    address_list = message.data;
+
+                }else{
+                    alert("服务器错误");
+                }
+            }else {
+                alert("数据错误")
+            }
+        },
+        error: function(message){
+            alert("访问错误");
+        }
+    });
+
+    return address_list;
+}
+
+
 // 设置弹出窗口样式
 // window.alert = function (str) {
 //     var shield = document.createElement("DIV");

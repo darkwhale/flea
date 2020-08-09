@@ -10,13 +10,14 @@ import org.springframework.stereotype.Service;
 import org.zxy.flea.VO.WaresSalesVO;
 import org.zxy.flea.consts.FleaConst;
 import org.zxy.flea.dataobject.Address;
-import org.zxy.flea.dataobject.WaresSales;
+import org.zxy.flea.dataobject.Sales;
 import org.zxy.flea.enums.ResponseEnum;
 import org.zxy.flea.enums.SalesStatusEnum;
+import org.zxy.flea.enums.SalesTypeEnum;
 import org.zxy.flea.exception.FleaException;
 import org.zxy.flea.form.WaresSalesCreateForm;
 import org.zxy.flea.form.WaresSalesUpdateForm;
-import org.zxy.flea.mapper.WaresSalesRepository;
+import org.zxy.flea.mapper.SalesRepository;
 import org.zxy.flea.service.WaresSalesService;
 import org.zxy.flea.util.ImageUtil;
 import org.zxy.flea.util.KeyUtil;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 public class WaresSalesServiceImpl implements WaresSalesService {
 
     @Resource
-    private WaresSalesRepository waresSalesRepository;
+    private SalesRepository salesRepository;
 
     @Resource
     private KeyUtil keyUtil;
@@ -46,88 +47,89 @@ public class WaresSalesServiceImpl implements WaresSalesService {
     private AddressServiceImpl addressService;
 
     @Override
-    public List<WaresSales> getListByUserId(String userId) {
-        return waresSalesRepository.findAllByUserId(userId);
+    public List<Sales> getListByUserId(String userId) {
+        return salesRepository.findAllBySalesTypeAndUserId(SalesTypeEnum.WARES.getCode(), userId);
     }
 
     @Override
-    public WaresSales create(WaresSalesCreateForm waresSalesCreateForm, String userId) {
+    public Sales create(WaresSalesCreateForm waresSalesCreateForm, String userId) {
 
-        WaresSales waresSales = new WaresSales();
-        BeanUtils.copyProperties(waresSalesCreateForm, waresSales);
+        Sales sales = new Sales();
+        BeanUtils.copyProperties(waresSalesCreateForm, sales);
 
         // 设置id
         String key = keyUtil.genUniqueKey();
-        waresSales.setSalesId(key);
-        waresSales.setUserId(userId);
+        sales.setSalesId(key);
+        sales.setUserId(userId);
+        sales.setSalesType(SalesTypeEnum.WARES.getCode());
 
         // 设置图像
         String imagePath = ImageUtil.saveImage("sales", key, waresSalesCreateForm.getImage_info());
         if (imagePath != null) {
-            waresSales.setIcon(imagePath);
+            sales.setIcon(imagePath);
         }
 
-        waresSalesRepository.save(waresSales);
+        salesRepository.save(sales);
 
         // 添加入redis;
         salesRedisUtil.add(key);
 
-        return waresSales;
+        return sales;
     }
 
     @Override
-    public WaresSales update(WaresSalesUpdateForm waresSalesUpdateForm, String userId) {
-        WaresSales waresSales = waresSalesRepository.findBySalesId(waresSalesUpdateForm.getSalesId());
+    public Sales update(WaresSalesUpdateForm waresSalesUpdateForm, String userId) {
+        Sales sales = salesRepository.findBySalesTypeAndSalesId(SalesTypeEnum.WARES.getCode(), waresSalesUpdateForm.getSalesId());
 
         // 查询为null，或用户不一致，则抛查询失败异常；
-        if (waresSales == null || !waresSales.getUserId().equals(userId)) {
+        if (sales == null || !sales.getUserId().equals(userId)) {
             throw new FleaException(ResponseEnum.SALES_NOT_EXIST);
         }
 
-        BeanUtils.copyProperties(waresSalesUpdateForm, waresSales);
+        BeanUtils.copyProperties(waresSalesUpdateForm, sales);
         // 设置图像
-        String imagePath = ImageUtil.saveImage("sales", waresSales.getSalesId(), waresSalesUpdateForm.getImage_info());
+        String imagePath = ImageUtil.saveImage("sales", sales.getSalesId(), waresSalesUpdateForm.getImage_info());
         if (imagePath != null) {
-            waresSales.setIcon(imagePath);
+            sales.setIcon(imagePath);
         }
 
-        waresSalesRepository.save(waresSales);
+        salesRepository.save(sales);
 
-        return waresSales;
+        return sales;
     }
 
     @Override
-    public WaresSales delete(String salesId, String userId) {
-        WaresSales waresSales = waresSalesRepository.findBySalesId(salesId);
+    public Sales delete(String salesId, String userId) {
+        Sales sales = salesRepository.findBySalesTypeAndSalesId(SalesTypeEnum.WARES.getCode(), salesId);
 
         // 查询为null，或用户不一致，则抛查询失败异常；
-        if (waresSales == null || !waresSales.getUserId().equals(userId)) {
+        if (sales == null || !sales.getUserId().equals(userId)) {
             throw new FleaException(ResponseEnum.SALES_NOT_EXIST);
         }
 
-        waresSalesRepository.delete(waresSales);
+        salesRepository.delete(sales);
 
         // 从redis删除
         salesRedisUtil.delete(salesId);
 
         // 删除图像；
-        if(waresSales.getIcon() != null) {
-            String imagePath = FleaConst.IMAGE_DIR + waresSales.getIcon();
+        if(sales.getIcon() != null) {
+            String imagePath = FleaConst.IMAGE_DIR + sales.getIcon();
             amqpTemplate.convertAndSend(FleaConst.AMQP_QUEUE, imagePath);
         }
 
-        return waresSales;
+        return sales;
     }
 
     @Override
     public void deleteAll(String userId) {
-        List<WaresSales> waresSalesList = getListByUserId(userId);
+        List<Sales> salesList = getListByUserId(userId);
 
         // 删除数据库数据;
-        waresSalesRepository.deleteAll(waresSalesList);
+        salesRepository.deleteAll(salesList);
 
         // todo 删除图像;
-        List<String> imagePathList = waresSalesList.stream()
+        List<String> imagePathList = salesList.stream()
                 .map(e -> FleaConst.IMAGE_DIR + e.getIcon()).collect(Collectors.toList())
                 .stream()
                 .filter(Objects::nonNull).collect(Collectors.toList());
@@ -135,49 +137,44 @@ public class WaresSalesServiceImpl implements WaresSalesService {
         amqpTemplate.convertAndSend(FleaConst.AMPQ_QUEUE_BATCH, imagePathList);
 
         //删除redis;
-        List<String> salesIdList = waresSalesList.stream().map(WaresSales::getSalesId).collect(Collectors.toList());
+        List<String> salesIdList = salesList.stream().map(Sales::getSalesId).collect(Collectors.toList());
         salesRedisUtil.delete(salesIdList);
     }
 
     @Override
     public void rub(String userId) {
-        List<WaresSales> waresSalesList = getListByUserId(userId);
+        List<Sales> salesList = getListByUserId(userId);
 
-        for (WaresSales waresSales : waresSalesList) {
-            waresSales.setRubTime(waresSales.getRubTime() + 1);
+        for (Sales sales : salesList) {
+            sales.setRubTime(sales.getRubTime() + 1);
         }
-        waresSalesRepository.saveAll(waresSalesList);
+        salesRepository.saveAll(salesList);
     }
 
     @Override
-    public WaresSales getBookSalesInfo(String waresSalesId) {
-        return waresSalesRepository.findBySalesId(waresSalesId);
-    }
-
-    @Override
-    public WaresSales onSale(String salesId, String userId) {
+    public Sales onSale(String salesId, String userId) {
         return changeStatus(salesId, userId, SalesStatusEnum.ON_SALE.getCode());
     }
 
     @Override
-    public WaresSales schedule(String salesId, String userId) {
+    public Sales schedule(String salesId, String userId) {
         return changeStatus(salesId, userId, SalesStatusEnum.SCHEDULE.getCode());
     }
 
     @Override
-    public WaresSales offSale(String salesId, String userId) {
+    public Sales offSale(String salesId, String userId) {
         return changeStatus(salesId, userId, SalesStatusEnum.OFF_SALE.getCode());
     }
 
-    private WaresSales changeStatus(String salesId, String userId, Integer status) {
-        WaresSales waresSales = waresSalesRepository.findBySalesId(salesId);
+    private Sales changeStatus(String salesId, String userId, Integer status) {
+        Sales sales = salesRepository.findBySalesTypeAndSalesId(SalesTypeEnum.WARES.getCode(), salesId);
         // 查询为null，或用户不一致，则抛查询失败异常；
-        if (waresSales == null || !waresSales.getUserId().equals(userId)) {
+        if (sales == null || !sales.getUserId().equals(userId)) {
             throw new FleaException(ResponseEnum.SALES_NOT_EXIST);
         }
 
-        waresSales.setStatus(status);
-        waresSalesRepository.save(waresSales);
+        sales.setStatus(status);
+        salesRepository.save(sales);
 
         // 操作redis；
         if (status.equals(SalesStatusEnum.ON_SALE.getCode())) {
@@ -186,53 +183,41 @@ public class WaresSalesServiceImpl implements WaresSalesService {
             salesRedisUtil.delete(salesId);
         }
 
-        return waresSales;
+        return sales;
     }
 
     @Override
-    public List<WaresSales> getList(int size) {
-        if (size < 0 || size > 40) {
-            size = 20;
-        }
-        List<String> salesIdList = salesRedisUtil.getRandSalesIdList(size);
-        List<WaresSales> result = waresSalesRepository.findAllBySalesIdIn(salesIdList);
-
-        Random random = new Random(System.currentTimeMillis());
-        Collections.shuffle(result, random);
-        return result;    }
-
-    @Override
-    public WaresSalesVO converter(WaresSales waresSales) {
+    public WaresSalesVO converter(Sales sales) {
         WaresSalesVO waresSalesVO = new WaresSalesVO();
-        BeanUtils.copyProperties(waresSales, waresSalesVO);
+        BeanUtils.copyProperties(sales, waresSalesVO);
 
         Map<Integer, Address> addressMap = addressService.getAddressList();
 
-        if (waresSales.getSalesAddressId() != null) {
-            waresSalesVO.setSalesAddress(addressMap.get(waresSales.getSalesAddressId()).toString());
+        if (sales.getSalesAddressId() != null) {
+            waresSalesVO.setSalesAddress(addressMap.get(sales.getSalesAddressId()).toString());
         }
 
         return waresSalesVO;
     }
 
     @Override
-    public List<WaresSalesVO> converter(List<WaresSales> waresSalesList) {
+    public List<WaresSalesVO> converter(List<Sales> waresSalesList) {
         return waresSalesList.stream().map(this::converter).collect(Collectors.toList());
     }
 
     @Override
-    public Page<WaresSales> getListByAddressId(Integer salesAddressId, Pageable pageable) {
+    public Page<Sales> getListByAddressId(Integer salesAddressId, Pageable pageable) {
 
         if (salesAddressId == null) {
-            return waresSalesRepository.findAllByStatusOrderByUpdateTimeDesc(SalesStatusEnum.ON_SALE.getCode(), pageable);
+            return salesRepository.findAllBySalesTypeAndStatusOrderByUpdateTimeDesc(SalesTypeEnum.WARES.getCode(), SalesStatusEnum.ON_SALE.getCode(), pageable);
         }else {
-            return waresSalesRepository.findAllByStatusAndSalesAddressIdOrderByUpdateTimeDesc(SalesStatusEnum.ON_SALE.getCode(), salesAddressId, pageable);
+            return salesRepository.findAllBySalesTypeAndStatusAndSalesCampusIdOrderByUpdateTimeDesc(SalesTypeEnum.WARES.getCode(), SalesStatusEnum.ON_SALE.getCode(), salesAddressId, pageable);
         }
 
     }
 
     @Override
-    public Page<WaresSalesVO> converter(Page<WaresSales> waresSalesPage, Pageable pageable) {
+    public Page<WaresSalesVO> converter(Page<Sales> waresSalesPage, Pageable pageable) {
         List<WaresSalesVO> waresSalesVOList = waresSalesPage.getContent().stream()
                 .map(this::converter).collect(Collectors.toList());
 

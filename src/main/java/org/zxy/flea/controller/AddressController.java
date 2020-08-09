@@ -72,4 +72,11 @@ public class AddressController {
 
         return ResponseVOUtil.success(addressList);
     }
+
+    @GetMapping("/nonRegionList")
+    ResponseVO<Set<Address>> nonRegionList() {
+        Set<Address> addressList = addressService.getNonRegionList();
+
+        return ResponseVOUtil.success(addressList);
+    }
 }

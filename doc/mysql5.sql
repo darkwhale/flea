@@ -116,3 +116,28 @@ create table `wares_sales`(
 	primary key(`sales_id`),
 	key `sales_user` (`user_id`) using btree
 )engine=InnoDB default charset=utf8;
+
+
+-- 商品总表
+
+-- 书籍表
+drop table if exists `sales`;
+create table `sales`(
+     `sales_id` varchar(32) not null comment '商品id',
+     `sales_type` tinyint(1) not null comment '商品类型，0书籍，1杂货',
+     `user_id` varchar(32) not null comment '用户id',
+     `sales_name` varchar(64) not null comment '商品名称',
+     `synopsis` varchar(256) not null comment '商品简介',
+     `price` float not null comment '商品价格',
+     `icon` varchar(128) comment '商品图片',
+     `sales_campus_id` int(4) comment '专业',
+     `sales_address_id` int(4) comment '地址',
+     `new_level` int(4) not null default '10' comment '商品崭新度',
+     `status` int(4) not null default '0' comment '商品状态：0在售，1预定，2已卖出',
+     `items` varchar(128) not null comment '商品项',
+     `rub_time` int(32) not null default '0' comment '擦亮次数',
+     `create_time` timestamp not null default current_timestamp comment '创建时间',
+     `update_time` timestamp not null default current_timestamp on update current_timestamp comment '最后修改时间',
+     primary key(`sales_id`),
+     key `sales_user` (`user_id`) using btree
+)engine=InnoDB default charset=utf8;
