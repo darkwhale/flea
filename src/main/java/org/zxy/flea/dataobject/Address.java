@@ -3,6 +3,8 @@ package org.zxy.flea.dataobject;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.zxy.flea.enums.ResponseEnum;
+import org.zxy.flea.exception.FleaException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +17,7 @@ import java.util.Date;
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class Address implements Serializable {
+public class Address implements Serializable, Comparable {
 
     private static final long serialVersionUID = 5645228902910371151L;
 
@@ -52,5 +54,26 @@ public class Address implements Serializable {
         }else {
             return addressRegion;
         }
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (this == o) {
+            return 0;
+        }
+        if (o instanceof Address) {
+            Address other = (Address) o;
+            if(this.addressRegion.compareTo(other.addressRegion) == 0) {
+                if (this.addressFloor == null) {
+                    return -1;
+                }else if (other.addressFloor == null) {
+                    return 1;
+                }else {
+                    return this.addressFloor.compareTo(other.addressFloor);
+                }
+            }
+            return this.addressRegion.compareTo(other.addressRegion);
+        }
+        throw new FleaException(ResponseEnum.TYPE_ERROR);
     }
 }

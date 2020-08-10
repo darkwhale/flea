@@ -15,9 +15,7 @@ import org.zxy.flea.mapper.AddressRepository;
 import org.zxy.flea.service.AddressService;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,6 +74,7 @@ public class AddressServiceImpl implements AddressService {
     @Cacheable(cacheNames = "addressList", key = "123")
     public Map<Integer, Address> getAddressList() {
         List<Address> addressList = addressRepository.findAll();
+        Collections.sort(addressList);
 
         return addressList.stream()
                 .collect(Collectors.toMap(Address::getAddressId, address -> address));
@@ -84,13 +83,16 @@ public class AddressServiceImpl implements AddressService {
     @Override
     @Cacheable(cacheNames = "addressList", key = "124")
     public List<Address> getAll() {
-        return addressRepository.findAll();
+        List<Address> addressList = addressRepository.findAll();
+        Collections.sort(addressList);
+        return addressList;
     }
 
     @Override
     public List<Address> getFilter(AddressTypeEnum addressTypeEnum) {
 
         List<Address> addressList = addressRepository.findByAddressType(addressTypeEnum.getCode());
+        Collections.sort(addressList);
 
         return addressList.stream().filter(e -> !StringUtils.isEmpty(e.getAddressFloor())).collect(Collectors.toList());
     }
@@ -99,6 +101,7 @@ public class AddressServiceImpl implements AddressService {
     @Cacheable(cacheNames = "addressList", key = "125")
     public Set<Address> getRegionList() {
         List<Address> addressList = addressRepository.findAll();
+        Collections.sort(addressList);
 
         return addressList.stream()
                 .filter(e -> StringUtils.isEmpty(e.getAddressFloor())).collect(Collectors.toSet());
@@ -108,6 +111,7 @@ public class AddressServiceImpl implements AddressService {
     @Cacheable(cacheNames = "addressList", key = "126")
     public Set<Address> getNonRegionList() {
         List<Address> addressList = addressRepository.findAll();
+        Collections.sort(addressList);
 
         return addressList.stream()
                 .filter(e -> !StringUtils.isEmpty(e.getAddressFloor())).collect(Collectors.toSet());    }

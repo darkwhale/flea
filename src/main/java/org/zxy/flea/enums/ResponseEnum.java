@@ -29,6 +29,9 @@ public enum ResponseEnum {
     SALES_NOT_EXIST(20, "商品不存在"),
 
 
+    TYPE_ERROR(30, "错误类型"),
+
+
     PARAM_ERROR(50, "输入参数有误"),
     ;
 

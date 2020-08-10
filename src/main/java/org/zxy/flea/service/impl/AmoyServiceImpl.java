@@ -59,6 +59,12 @@ public class AmoyServiceImpl implements AmoyService {
     @Override
     public Page<Sales> findByName(String keyword, Pageable pageable) {
 
+        // 先转义
+        keyword = keyword.replace("\\", "\\\\")
+                .replace("+", "\\+")
+                .replace("-", "\\-")
+                .replace("*", "\\*");
+
         String[] keyList = keyword.split("\\s+");
 
         if (keyList.length == 1) {

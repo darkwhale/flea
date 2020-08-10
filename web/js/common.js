@@ -305,7 +305,7 @@ function normal_icon(sales, type) {
 function ajax_search() {
     var keyword = document.getElementById("search_input").value;
 
-    if (keyword !== "" && keyword.trim().split(/\s+/).length < 10) {
+    if (keyword !== "" && keyword.trim().split(/\s+/).length < 5) {
         window.location.href = get_main_url() + "search.html?keyword=" + encodeURI(encodeURI(keyword));
     }
 }
