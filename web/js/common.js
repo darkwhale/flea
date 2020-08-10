@@ -1,3 +1,10 @@
+$(document).ready(function(){
+    $('#search_input').keydown(function (e) {
+        if(e.which === 13) {
+            $('#search_button').trigger("click");
+        }
+    });
+});
 
 
 function clear_cache() {
@@ -28,7 +35,7 @@ function getCookie(name)
 }
 
 function get_main_url() {
-    return "http://127.0.0.1/";
+    return "http://127.0.0.1/school/";
 }
 
 function get_enter_year_list() {
@@ -295,6 +302,13 @@ function normal_icon(sales, type) {
     return return_icon;
 }
 
+function ajax_search() {
+    var keyword = document.getElementById("search_input").value;
+
+    if (keyword !== "" && keyword.trim().split(/\s+/).length < 10) {
+        window.location.href = get_main_url() + "search.html?keyword=" + encodeURI(encodeURI(keyword));
+    }
+}
 
 var booth_image_size = "120px";
 var sales_image_size = "120px";
@@ -304,3 +318,4 @@ var book_default_icon = "book_default.jpg";
 var wares_default_icon = "wares_default.jpg";
 
 var address_type_list = ["宿舍地址", "学习地址"];
+

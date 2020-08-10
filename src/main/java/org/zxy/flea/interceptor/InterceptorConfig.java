@@ -13,7 +13,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/login", "/user/register", "/user/findByName", "/user/findById",
                         "/address/*", "/campus/*", "/bookBooth/salesList", "/waresBooth/salesList", "/amoy/list",
-                        "/bookBooth/getByCampus", "/waresBooth/getByAddress");
+                        "/bookBooth/getByCampus", "/waresBooth/getByAddress", "/amoy/findByKeyword");
 
         registry.addInterceptor(new RootUserInterceptor())
                 .addPathPatterns("/address/*", "/campus/*")

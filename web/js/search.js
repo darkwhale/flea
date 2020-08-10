@@ -12,72 +12,35 @@ $(document).ready(function(){
         $("#logout").text("退出");
     }
 
-    ajax_campus_show();
-    show_campus_list();
+    ajax_search_info();
 
 });
 
-function ajax_campus_show() {
-    var campus_container = document.getElementById("campus_container");
-
-    // 添加全部专业;
-    var all_campus_body = document.createElement("h2");
-    all_campus_body.setAttribute("class", "index-title");
-
-    campus_container.appendChild(all_campus_body);
-
-    var all_campus_a = document.createElement("a");
-    all_campus_a.setAttribute("href", get_main_url() + "book.html");
-
-    all_campus_a.setAttribute("class", "index-link");
-    all_campus_a.innerText = "全部";
-
-    all_campus_body.appendChild(all_campus_a);
-
-    campus_list = ajax_campus_list();
-    for (index in campus_list) {
-        campus = campus_list[index];
-
-        var campus_body = document.createElement("h2");
-        campus_body.setAttribute("class", "index-title");
-
-        campus_container.appendChild(campus_body);
-
-        var campus_a = document.createElement("a");
-        campus_a.setAttribute("href", get_main_url() + "book.html?campusId=" + campus.campusId);
-        campus_a.setAttribute("class", "index-link");
-        campus_a.innerText = campus.campusName;
-
-        campus_body.appendChild(campus_a);
-    }
-
-}
-
-function show_campus_list() {
+function ajax_search_info() {
 
     var left_container = document.getElementById("left_container");
     var right_container = document.getElementById("right_container");
     left_container.innerHTML = "";
     right_container.innerHTML = "";
 
-    campus_id = GetRequest()["campusId"];
-    pageNum = GetRequest()["pageNum"];
-    pageSize = GetRequest()["pageSize"];
+    var keyword = decodeURI(GetRequest()["keyword"]);
+    var pageNum = GetRequest()["pageNum"];
+    var pageSize = GetRequest()["pageSize"];
 
     $.ajax({
         type: "get",
-        url: "flea/bookBooth/getByCampus",
+        url: "flea/amoy/findByKeyword",
         contentType: "application/x-www-form-urlencoded",
         dataType: "json",
         data: {
-            "campusId": campus_id,
+            "keyword": keyword,
             "pageNum": pageNum,
             "pageSize": pageSize,
         },
         success: function (message) {
             if (message) {
                 if (message.code === 0) {
-                    //写个人信息
+                    // 查询成功
                     result = message.data.content;
 
                     if (result.length === 0) {
@@ -94,6 +57,7 @@ function show_campus_list() {
 
 
                         left_container.appendChild(prompt_info);
+
                     }else {
 
                         left_book_list = result.slice(0, (result.length + 1) / 2);
@@ -123,12 +87,8 @@ function show_campus_list() {
                         page_ul.setAttribute("class", "pagination");
 
                         left_container.appendChild(page_ul);
-                        if (typeof (campus_id) === "undefined") {
-                            campus_dest = "";
-                        }else {
-                            campus_dest = "campusId=" + campus_id + "&";
-                        }
 
+                        var key_dest = "keyword=" + keyword;
                         if (size === 20) {
                             size_dest = "";
                         }else {
@@ -142,8 +102,8 @@ function show_campus_list() {
                         var page_before_a = document.createElement("a");
                         if(!first) {
                             page_before_a.setAttribute("href", get_main_url() +
-                                "book.html?" +
-                                campus_dest + "&pageNum=" + (number - 1) + size_dest);
+                                "search.html?" +
+                                key_dest + "&pageNum=" + (number - 1) + size_dest);
                         }
 
                         page_before_a.innerText = "<";
@@ -176,8 +136,8 @@ function show_campus_list() {
                             var page_a = document.createElement("a");
                             if (index != number) {
                                 page_a.setAttribute("href", get_main_url() +
-                                    "book.html?" +
-                                    campus_dest + "&pageNum=" + index + size_dest);
+                                    "search.html?" +
+                                    key_dest + "&pageNum=" + index + size_dest);
                             }
 
                             page_a.innerText = page_index;
@@ -197,8 +157,8 @@ function show_campus_list() {
                         var page_after_a = document.createElement("a");
                         if(!last) {
                             page_after_a.setAttribute("href", get_main_url() +
-                                "book.html?" +
-                                campus_dest + "&pageNum=" + (number + 1) + size_dest);
+                                "search.html?" +
+                                key_dest + "&pageNum=" + (number + 1) + size_dest);
                         }
 
                         page_after_a.innerText = ">";
@@ -211,13 +171,12 @@ function show_campus_list() {
                     }
 
                 }
-            }else {
-                alert("数据错误");
             }
         }
     });
 
 }
+
 
 function create_sales_unit(container, sales) {
     var parent_table = document.createElement("table");
@@ -289,3 +248,4 @@ function create_sales_unit(container, sales) {
 
     container.append(parent_table);
 }
+

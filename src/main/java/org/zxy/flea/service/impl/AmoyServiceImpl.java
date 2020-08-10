@@ -1,5 +1,6 @@
 package org.zxy.flea.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +22,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class AmoyServiceImpl implements AmoyService {
 
     @Resource
@@ -55,14 +57,28 @@ public class AmoyServiceImpl implements AmoyService {
     }
 
     @Override
-    public Page<Sales> findByName(String salesName, String synopsis) {
-        return null;
+    public Page<Sales> findByName(String keyword, Pageable pageable) {
+
+        String[] keyList = keyword.split("\\s+");
+
+        if (keyList.length == 1) {
+            return salesRepository.findAllByNames(keyList[0], pageable);
+        }else if (keyList.length == 2) {
+            return salesRepository.findAllByNames(keyList[0], keyList[1], pageable);
+        }else if (keyList.length == 3) {
+            return salesRepository.findAllByNames(keyList[0], keyList[1], keyList[2], pageable);
+        }else if (keyList.length == 4) {
+            return salesRepository.findAllByNames(keyList[0], keyList[1], keyList[2], keyList[3], pageable);
+        }else{
+            return salesRepository.findAllByNames(keyList[0], keyList[1], keyList[2], keyList[3], keyList[4], pageable);
+        }
     }
 
     @Override
     public Page<AmoyVO> converter(Page<Sales> salesPage, Pageable pageable) {
 
         List<AmoyVO> amoyVOList = salesPage.getContent().stream().map(this::converter).collect(Collectors.toList());
+
         return new PageImpl<>(amoyVOList, pageable, salesPage.getTotalElements());
     }
 

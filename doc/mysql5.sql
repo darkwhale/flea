@@ -1,4 +1,6 @@
 
+CREATE DATABASE `flea` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- 建立用户表
 drop table if exists `user`;
 create table `user`(

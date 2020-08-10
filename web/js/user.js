@@ -24,6 +24,9 @@ $(document).ready(function(){
 
 // 获取用户信息
 function ajax_user_info() {
+    var username = getCookie("username");
+    console.log(username);
+    $("#username").text(username);
     $.ajax({
         type: "get",
         url: "flea/user/user",
@@ -525,7 +528,7 @@ function create_book_style(container, sales) {
     new_level_info.innerText = sales.newLevel + "成新" + " " + sales.price + "元";
     // new_level_info.innerText = new_level_list[new_level];
     var items_info = document.createElement("p");
-    items_info.innerText = "价格：" + sales.items;
+    items_info.innerText = "商品项：" + sales.items;
     var synopsis_info = document.createElement("p");
     synopsis_info.setAttribute("class", "synopsis_info");
     synopsis_info.innerText = "简介：" + sales.synopsis;
@@ -627,7 +630,7 @@ function create_wares_style(container, sales) {
     new_level_info.innerText = sales.newLevel + "成新" + " " + sales.price + "元";
     // new_level_info.innerText = new_level_list[new_level];
     var items_info = document.createElement("p");
-    items_info.innerText = "价格：" + sales.items;
+    items_info.innerText = "商品项：" + sales.items;
     var synopsis_info = document.createElement("p");
     synopsis_info.setAttribute("class", "synopsis_info");
     synopsis_info.innerText = "简介：" + sales.synopsis;
@@ -1008,7 +1011,7 @@ function save_book_sales(salesId) {
             }
         },
         error: function(message){
-            alert("访问错误");
+            alert("数据错误");
         }
     });
 }
@@ -1110,7 +1113,7 @@ function save_wares_sales(salesId) {
             }
         },
         error: function(message){
-            alert("访问错误");
+            alert("数据错误");
         }
     });
 }
@@ -1274,7 +1277,7 @@ function ajax_campus_manager() {
                         var prompt_info = document.createElement("blockquote");
 
                         var prompt_info_p = document.createElement("p");
-                        prompt_info_p.innerText = "您还没有添加书籍哦，快去创建吧～";
+                        prompt_info_p.innerText = "您还没有添加专业哦，快去创建吧～";
 
                         var prompt_info_small = document.createElement("small");
                         prompt_info_small.innerText = "一位善意的智者";

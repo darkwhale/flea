@@ -13,7 +13,7 @@ public interface AmoyService {
 
     AmoyVO converter(Sales sales);
 
-    Page<Sales> findByName(String salesName, String synopsis);
+    Page<Sales> findByName(String keyword, Pageable pageable);
 
     Page<AmoyVO> converter(Page<Sales> salesPage, Pageable pageable);
 }

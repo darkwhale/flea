@@ -225,7 +225,7 @@ function create_book_unit(container, sales, type) {
     new_level_info.innerText = sales.newLevel + "成新" + " " + sales.price + "元";
     // new_level_info.innerText = new_level_list[new_level];
     var items_info = document.createElement("p");
-    items_info.innerText = "价格：" + sales.items;
+    items_info.innerText = "商品项：" + sales.items;
     var synopsis_info = document.createElement("p");
     synopsis_info.setAttribute("class", "synopsis_info");
 
