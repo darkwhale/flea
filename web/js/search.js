@@ -211,7 +211,7 @@ function create_sales_unit(container, sales) {
 
     image_icon = normal_icon(sales, 0);
 
-    image_content.src = "images/" + image_icon + '?t='+(+new Date());
+    image_content.src = image_server_dir + image_icon + '?t='+(+new Date());
 
     image_td.appendChild(image_content);
 

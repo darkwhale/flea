@@ -35,7 +35,7 @@ function getCookie(name)
 }
 
 function get_main_url() {
-    return "http://127.0.0.1/school/";
+    return "http://127.0.0.1/";
 }
 
 function get_enter_year_list() {
@@ -310,6 +310,7 @@ function ajax_search() {
     }
 }
 
+var image_server_dir = "http://127.0.0.1/images/";
 var booth_image_size = "120px";
 var sales_image_size = "120px";
 var new_level_list = ["10成新", "9成新", "8成新", "7成新", "6成新", "5成新", "4成新", "3成新", "2成新", "1成新"];

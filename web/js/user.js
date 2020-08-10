@@ -516,7 +516,7 @@ function create_book_style(container, sales) {
     image_content.style.height = sales_image_size;
 
     image_icon = normal_icon(sales, 0);
-    image_content.src = "images/" + image_icon + '?t='+(+new Date());
+    image_content.src = image_server_dir + image_icon + '?t='+(+new Date());
 
     image_td.appendChild(image_content);
 
@@ -618,7 +618,7 @@ function create_wares_style(container, sales) {
     image_content.style.height = sales_image_size;
 
     image_icon = normal_icon(sales, 1);
-    image_content.src = "images/" + image_icon + '?t='+(+new Date());
+    image_content.src = image_server_dir + image_icon + '?t='+(+new Date());
 
     image_td.appendChild(image_content);
 
@@ -910,7 +910,7 @@ function add_sales_element(container, name, value, element_id) {
         sub_image.setAttribute("id", "image_window");
         // sub_image.src = value;
         if (value !== null) {
-            sub_image.src = "images/" + value + '?t='+(+new Date());
+            sub_image.src = image_server_dir + value + '?t='+(+new Date());
         }
         sub_image.style.height = sales_image_size;
         sub_image.style.width = sales_image_size;
