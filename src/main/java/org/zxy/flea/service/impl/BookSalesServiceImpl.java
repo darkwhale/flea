@@ -52,6 +52,14 @@ public class BookSalesServiceImpl implements BookSalesService {
     }
 
     @Override
+    public List<Sales> getOtherListByUserId(String userId) {
+        return salesRepository.findAllByStatusAndSalesTypeAndUserId(
+                SalesStatusEnum.ON_SALE.getCode(),
+                SalesTypeEnum.BOOK.getCode(),
+                userId);
+    }
+
+    @Override
     public Sales create(BookSalesCreateForm bookSalesCreateForm, String userId) {
 
         Sales sales = new Sales();

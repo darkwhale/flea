@@ -39,7 +39,7 @@ public class WaresSalesController {
     @GetMapping("/salesList")
     ResponseVO<List<WaresSalesVO>> salesList(@RequestParam("userId") String userId) {
 
-        List<Sales> waresSalesList = waresSalesService.getListByUserId(userId);
+        List<Sales> waresSalesList = waresSalesService.getOtherListByUserId(userId);
 
         List<WaresSalesVO> waresSalesVOList = waresSalesService.converter(waresSalesList);
         return ResponseVOUtil.success(waresSalesVOList);

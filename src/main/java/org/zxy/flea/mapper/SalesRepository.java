@@ -12,6 +12,8 @@ public interface SalesRepository extends JpaRepository<Sales, String> {
 
     List<Sales> findAllBySalesTypeAndUserId(Integer salesType, String userId);
 
+    List<Sales> findAllByStatusAndSalesTypeAndUserId(Integer status, Integer salesType, String userId);
+
     Sales findBySalesTypeAndSalesId(Integer salesType, String salesId);
 
     /**
@@ -27,29 +29,29 @@ public interface SalesRepository extends JpaRepository<Sales, String> {
 
 //    Page<Sales> findAllBySalesNameLikeOrSynopsisLikeAndStatusOrderByUpdateTimeDesc(String salesName, String synopsis, Integer status, Pageable pageable);
 
-    @Query(value = "select * from sales where concat(sales_name, ' ', items) regexp :keyword", nativeQuery = true)
+    @Query(value = "select * from sales where status = 0 and concat(sales_name, ' ', items) regexp :keyword", nativeQuery = true)
     Page<Sales> findAllByNames(String keyword, Pageable pageable);
 
 
-    @Query(value = "select * from sales where concat(sales_name, ' ', items) regexp :keyword1 and " +
+    @Query(value = "select * from sales where status = 0 and concat(sales_name, ' ', items) regexp :keyword1 and " +
             "concat(sales_name, ' ', items) regexp :keyword2", nativeQuery = true)
     Page<Sales> findAllByNames(String keyword1, String keyword2, Pageable pageable);
 
 
-    @Query(value = "select * from sales where concat(sales_name, ' ', items) regexp :keyword1 and " +
+    @Query(value = "select * from sales where status = 0 and concat(sales_name, ' ', items) regexp :keyword1 and " +
             "concat(sales_name, ' ', items) regexp :keyword2 and " +
             "concat(sales_name, ' ', items) regexp :keyword3", nativeQuery = true)
     Page<Sales> findAllByNames(String keyword1, String keyword2, String keyword3, Pageable pageable);
 
 
-    @Query(value = "select * from sales where concat(sales_name, ' ', items) regexp :keyword1 and " +
+    @Query(value = "select * from sales where status = 0 and concat(sales_name, ' ', items) regexp :keyword1 and " +
             "concat(sales_name, ' ', items) regexp :keyword2 and " +
             "concat(sales_name, ' ', items) regexp :keyword3 and " +
             "concat(sales_name, ' ', items) regexp :keyword4", nativeQuery = true)
     Page<Sales> findAllByNames(String keyword1, String keyword2, String keyword3, String keyword4, Pageable pageable);
 
 
-    @Query(value = "select * from sales where concat(sales_name, ' ', items) regexp :keyword1 and " +
+    @Query(value = "select * from sales where status = 0 and concat(sales_name, ' ', items) regexp :keyword1 and " +
             "concat(sales_name, ' ', items) regexp :keyword2 and " +
             "concat(sales_name, ' ', items) regexp :keyword3 and " +
             "concat(sales_name, ' ', items) regexp :keyword4 and " +

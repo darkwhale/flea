@@ -1,12 +1,11 @@
 package org.zxy.flea.util;
 
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.zxy.flea.consts.FleaConst;
 import sun.misc.BASE64Decoder;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 
 @Slf4j
@@ -37,11 +36,23 @@ public class ImageUtil {
             out.write(b);
             out.flush();
             out.close();
+
+            // 缩放图片
+            resizeImage(imgFilePath, imgFilePath);
             return prefix + imageId + ".jpg";
         }
         catch (Exception e)
         {
             return null;
+        }
+    }
+
+    public static void resizeImage(String srcPath, String destPath) {
+        try {
+            InputStream is = new FileInputStream(srcPath);
+            Thumbnails.of(is).forceSize(100, 100).toFile(destPath);
+        }catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -13,6 +13,8 @@ public interface WaresSalesService {
 
     List<Sales> getListByUserId(String userId);
 
+    List<Sales> getOtherListByUserId(String userId);
+
     Sales create(WaresSalesCreateForm waresSalesCreateForm, String userId);
 
     Sales update(WaresSalesUpdateForm waresSalesUpdateForm, String userId);

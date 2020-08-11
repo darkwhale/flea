@@ -791,11 +791,11 @@ function edit_wares_sales(sales) {
     }
 
     add_sales_element(user_table_body, "商品名", salesName, "sales_name");
-    add_sales_element(user_table_body, "简介", synopsis, "synopsis");
     add_sales_element(user_table_body, "价格", price, "price");
     add_sales_element(user_table_body, "场地", salesAddress, "address");
     add_sales_element(user_table_body, "新旧度", newLevel, "new_level");
     add_sales_element(user_table_body, "商品项", items, "items");
+    add_sales_element(user_table_body, "简介", synopsis, "synopsis");
     add_sales_element(user_table_body, "图片", icon, "image_info");
 
 }
@@ -849,11 +849,11 @@ function edit_book_sales(sales) {
     }
 
     add_sales_element(user_table_body, "商品名", salesName, "sales_name");
-    add_sales_element(user_table_body, "简介", synopsis, "synopsis");
     add_sales_element(user_table_body, "价格", price, "price");
     add_sales_element(user_table_body, "专业", salesCampus, "campus");
     add_sales_element(user_table_body, "新旧度", newLevel, "new_level");
     add_sales_element(user_table_body, "商品项", items, "items");
+    add_sales_element(user_table_body, "简介", synopsis, "synopsis");
     add_sales_element(user_table_body, "图片", icon, "image_info");
 
 }
@@ -931,6 +931,11 @@ function add_sales_element(container, name, value, element_id) {
 
         sub_value.appendChild(sub_image_div);
         sub_value.appendChild(sub_file_div);
+    }else if (element_id === "synopsis") {
+        sub_value = document.createElement("textarea");
+        sub_value.setAttribute("id", element_id);
+        sub_value.setAttribute("rows", "3");
+        sub_value.value = value;
     }else {
         sub_value = document.createElement("input");
         sub_value.setAttribute("id", element_id);

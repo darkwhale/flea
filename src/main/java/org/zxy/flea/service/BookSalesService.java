@@ -12,6 +12,8 @@ import java.util.List;
 public interface BookSalesService {
     List<Sales> getListByUserId(String userId);
 
+    List<Sales> getOtherListByUserId(String userId);
+
     Sales create(BookSalesCreateForm bookSalesCreateForm, String userId);
 
     Sales update(BookSalesUpdateForm bookSalesUpdateForm, String userId);

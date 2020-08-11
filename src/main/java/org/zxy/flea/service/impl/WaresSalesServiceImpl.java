@@ -47,6 +47,15 @@ public class WaresSalesServiceImpl implements WaresSalesService {
     private AddressServiceImpl addressService;
 
     @Override
+    public List<Sales> getOtherListByUserId(String userId) {
+        return salesRepository.findAllByStatusAndSalesTypeAndUserId(
+                SalesStatusEnum.ON_SALE.getCode(),
+                SalesTypeEnum.WARES.getCode(),
+                userId
+        );
+    }
+
+    @Override
     public List<Sales> getListByUserId(String userId) {
         return salesRepository.findAllBySalesTypeAndUserId(SalesTypeEnum.WARES.getCode(), userId);
     }
