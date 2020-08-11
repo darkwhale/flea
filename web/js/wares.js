@@ -263,13 +263,18 @@ function create_sales_unit(container, sales) {
     new_level_info.innerText = sales.newLevel + "成新" + " " + sales.price + "元";
     // new_level_info.innerText = new_level_list[new_level];
     var items_info = document.createElement("p");
-    items_info.innerText = "商品项：" + sales.items;
+    if (sales.items.length > 15) {
+        items_str = sales.items.slice(0, 10) + "..." + sales.items.slice(sales.items.length - 5);
+    }else {
+        items_str = sales.items;
+    }
+    items_info.innerText = "商品项：" + items_str;
     var synopsis_info = document.createElement("p");
     synopsis_info.setAttribute("class", "synopsis_info");
 
     // 处理简介信息；
-    if (sales.synopsis.length > 20) {
-        synopsis_str = sales.synopsis.slice(0, 15) + "..." + sales.synopsis.slice(sales.synopsis.length - 5);
+    if (sales.synopsis.length > 17) {
+        synopsis_str = sales.synopsis.slice(0, 12) + "..." + sales.synopsis.slice(sales.synopsis.length - 5);
     }else {
         synopsis_str = sales.synopsis;
     }

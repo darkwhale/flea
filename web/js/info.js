@@ -190,7 +190,7 @@ function create_book_unit(container, sales, type) {
     parent_tbody.appendChild(parent_tr);
 
     var image_td = document.createElement("td");
-    image_td.setAttribute("width", "20%");
+    image_td.setAttribute("width", "10%");
     parent_tr.appendChild(image_td);
 
     var info_td = document.createElement("td");
@@ -230,13 +230,13 @@ function create_book_unit(container, sales, type) {
     synopsis_info.setAttribute("class", "synopsis_info");
 
     // 处理简介信息；
-    if (sales.synopsis.length > 20) {
-        synopsis_str = sales.synopsis.slice(0, 15) + "..." + sales.synopsis.slice(sales.synopsis.length - 5);
-    }else {
-        synopsis_str = sales.synopsis;
-    }
+    // if (sales.synopsis.length > 17) {
+    //     synopsis_str = sales.synopsis.slice(0, 12) + "..." + sales.synopsis.slice(sales.synopsis.length - 5);
+    // }else {
+    //     synopsis_str = sales.synopsis;
+    // }
 
-    synopsis_info.innerText = "简介：" + synopsis_str;
+    synopsis_info.innerText = "简介：" + sales.synopsis;
 
     info_td.appendChild(sale_name_info);
     info_td.appendChild(new_level_info);

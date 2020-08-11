@@ -9,8 +9,8 @@ spring:
     port: 6379
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-  jpa:
-    show-sql: true
+#  jpa:
+#    show-sql: true
   rabbitmq:
     addresses: 127.0.0.1
     port: 5672
