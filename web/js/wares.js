@@ -287,7 +287,7 @@ function create_sales_unit(container, sales) {
     info_td.appendChild(synopsis_info);
 
     var user_info = document.createElement("strong");
-    user_info.innerText = sales.salesaddress;
+    user_info.innerText = sales.salesAddress;
 
     user_td.appendChild(user_info);
 

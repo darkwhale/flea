@@ -27,6 +27,8 @@ public interface SalesRepository extends JpaRepository<Sales, String> {
 
     Page<Sales> findAllBySalesTypeAndStatusAndSalesCampusIdOrderByUpdateTimeDesc(Integer salesType, Integer status, Integer salesCampusId, Pageable pageable);
 
+    Page<Sales> findAllBySalesTypeAndStatusAndSalesAddressIdOrderByUpdateTimeDesc(Integer salesType, Integer status, Integer salesAddressId, Pageable pageable);
+
 //    Page<Sales> findAllBySalesNameLikeOrSynopsisLikeAndStatusOrderByUpdateTimeDesc(String salesName, String synopsis, Integer status, Pageable pageable);
 
     @Query(value = "select * from sales where status = 0 and concat(sales_name, ' ', items) regexp :keyword", nativeQuery = true)

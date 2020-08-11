@@ -137,7 +137,6 @@ public class WaresSalesServiceImpl implements WaresSalesService {
         // 删除数据库数据;
         salesRepository.deleteAll(salesList);
 
-        // todo 删除图像;
         List<String> imagePathList = salesList.stream()
                 .map(e -> FleaConst.IMAGE_DIR + e.getIcon()).collect(Collectors.toList())
                 .stream()
@@ -220,7 +219,7 @@ public class WaresSalesServiceImpl implements WaresSalesService {
         if (salesAddressId == null) {
             return salesRepository.findAllBySalesTypeAndStatusOrderByUpdateTimeDesc(SalesTypeEnum.WARES.getCode(), SalesStatusEnum.ON_SALE.getCode(), pageable);
         }else {
-            return salesRepository.findAllBySalesTypeAndStatusAndSalesCampusIdOrderByUpdateTimeDesc(SalesTypeEnum.WARES.getCode(), SalesStatusEnum.ON_SALE.getCode(), salesAddressId, pageable);
+            return salesRepository.findAllBySalesTypeAndStatusAndSalesAddressIdOrderByUpdateTimeDesc(SalesTypeEnum.WARES.getCode(), SalesStatusEnum.ON_SALE.getCode(), salesAddressId, pageable);
         }
 
     }
