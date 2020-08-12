@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var username = getCookie("username");
+    var username = getCookie("user_name");
     if (username === "") {
         $("#username").hide();
         $("#login").text("登录");
@@ -24,8 +24,7 @@ $(document).ready(function(){
 
 // 获取用户信息
 function ajax_user_info() {
-    var username = getCookie("username");
-    console.log(username);
+    var username = getCookie("user_name");
     $("#username").text(username);
     $.ajax({
         type: "get",
@@ -270,7 +269,7 @@ function post_user_info() {
         success: function(message){
             if (message){
                 if (message.code === 0) {
-                    document.cookie = document.cookie = 'username=' + message.data.username;
+                    document.cookie = document.cookie = 'user_name=' + message.data.username;
                     ajax_user_info();
                 }else{
                     alert("用户已退出登录");

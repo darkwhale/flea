@@ -24,7 +24,7 @@ function login(email, password) {
             if (message){
                 if (message.code === 0) {
                     // 写cookie
-                    document.cookie = 'username=' + message.data.username;
+                    document.cookie = 'user_name=' + message.data.username;
                     document.cookie = 'role=' + message.data.role.toString();
 
                     window.location=get_main_url();

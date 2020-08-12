@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var username = getCookie("username");
+    var username = getCookie("user_name");
     if (username === "") {
         $("#username").hide();
         $("#login").text("登录");
